@@ -1,0 +1,43 @@
+# WILDCARDS
+
+Los wildcards son una forma que tenemos de realizar ciertas operaciones relacionadas en el match de archivos para obtener varios elementos al mismo tiempo. Manejar los wildcards es muy útil porque nos ayuda a realizar tareas de manera muchisimo más eficiente.
+
+Una de las cosas interesantes que debemos saber acerca de los wildcards es que lo que hace el sistema es reescribir lo que debería haber allí. EJ: Supongamos que tenemos los archivos a.txt b.txt y b.txt en pwd.
+
+Al ejecutar 'echo *.txt' lo que nos va a devolver el comando va a ser lo siguiente -> a.txt b.txt b.txt. Ya que internamente bash va a reescribir *.txt por a.txt b.txt y b.txt.
+
+Por ejemplo, supongamos que tenemos un directorio que contiene cientos de elementos entre archivos jpg, mp3, mp4, wav etc..
+
+Ahora que mediante el comando mv queremos mover solo los elementos que contengan la extensión .jpg a una carpeta imagenes.
+
+Con la ayuda de los wildcards, podemos indicar de la siguiente manera:
+
+mv *.jpg /images
+
+de esta forma podemos capturar todos los elementos que contengan .jpg al final del archivo y moverlos a la carpeta images.
+
+
+## Tipos de WILDCARDS
+
+Nota importante, los wildcards NO SON EXPRESIONES REGULARES aunque se parezcan sintacticamente.
+
+En el directorio actual de esta guía, hay directorio llamado practice que contiene varios ficheros que podemos utilizar para practicar con ellos.
+
+Esto para poder prácticar los conceptos y que veamos más a fondo lo que podemos hacer
+
+Los wildcards son los siguientes:
+
+*: Este wildcard indica cualquier conjunto de caracteres incluyendo los vacios. Supongamos que queremos obtener todoslos archivos .png que estan en la carpeta 'practice'. Para esto hariamos lo siguiente: echo practice/*.png
+
+?: Este wildcard reescribe un solo carácter. Vamos a capturar sabiendo que tenemos unos ficheros llamados pra pre pri, digamos para capturarlos todos utilizaremos el comando 'ls pr?' indicando que encuentre todos los archivos que coincidan con ese caracter.  
+
+[0-9] o [a-z]: Estos wildcards son especiales ya que nos ayudan a definir que un caracter deba cumplir con el rango establecido dentro de los corchetes. 
+
+En el caso de los rangos númericos, indicamos el inicio y el final por lo que [3-5] indica que va a coincidir con todos los múmeros entre 3 y 5. 
+
+En el caso de los caracteres, usamos por ejemplo [c-g] para que coincida con todos los caracteres que se encuentren entre c y g.
+
+**: En el caso de bash 4.0 en adelante, podemos usar el wildcard ** para indicar todas las subcarpetas que se encuentren dentro del pwd donde se ejecuta. Esto es realmente útil ya que en el caso de los wildcards anteriores, el match lo realiza en el pwd local donde se ejecuta. Si tenemos subdirectorios, suponiendo que estamos en la raíz y ejecutamos echo *.png, el solo va a buscar en la ruta actual en la que nos encontremos, si queremos que busque en todas las subrutas, debemos hacer uso de **/*.png, en este caso si va a buscar en todos los subdirectorios que se encuentre por delante.
+
+Importante destacar que por ejemplo digamos que tenemos desde la raiz, un archivo .crypto en la ruta /cert/pers/cert.crypto, además de otras rutas y archivos entre medias, para poder buscar en todos los directorios entre medias deberiamos hacer lo siguiente: echo **/**/*.crypto. Esto suponiendo que sabemos que se encuentra en ese nivelear
+
