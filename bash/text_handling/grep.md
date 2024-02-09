@@ -11,6 +11,4 @@ Flags destacadas:
 -F: realiza la busqueda utilizando solo patrones de texto *sin regex*
 
 
-
-
 ** Con grep, tenemos la habilidad de buscar en archivos binarios pero no esta creada para ello :)
