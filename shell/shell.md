@@ -60,3 +60,44 @@ TEMP_ENV_VAR='this is a temporal env variable' python3 script.py
 En el ejemplo anterior, además de las variables definidas previamente, podremos enviar una variable temporal para que sea accedida por el script en esa ejecución, luego la variable desaparece. Esto es relevante sobretodo para cuando queremos tener un nivel más de protección para ciertas variables o información supersensible.
 
 
+<<<<<<< HEAD
+=======
+Path define las rutas que va a utilizar el sistema para alojar los archivos ejecutables. Los archivos ejecutables que se encuentren en path, van a poder ser accedidos desde cualquier parte del sistema.
+
+Podemos modificar la variable PATH siempre y cuando respetemos las rutas críticas del sistema.
+
+### Variable SHELL
+
+La variable SHELL es la que define que programa va a utilizar como shell por defecto a la hora de definir una consola.
+
+### Variable PS1 (Primary String 1)
+
+Esta variable es la encargada del texto que se muestra cuando estamos en la shell donde vemos la ruta el usuario y demas de nuestra terminal.
+
+```shell
+samdev@LaMazunkamba:~/linux$ -> Esto lo define la PS1
+```
+
+Para modificarla debemos cambiar los valores de la PS1 de la siguiente manera:
+
+Lo que tengamos en esta variable, es lo que se va a mostrar.
+
+#### Caracteres especiales
+
+En el PS1 podemos definir una serie de variables especiales que PS1 se va a encargar de escapar para que las rellene automáticamente con otros valores.
+
+- \u: Nombre de usuario actual.
+- \h: Nombre del host hasta el primer punto.
+- \H: Nombre completo del host.
+- \w: Ruta completa del directorio actual.
+- \W: Nombre del directorio actual.
+- $: Símbolo del prompt ($ para usuarios regulares, # para usuarios root).
+- \: Un carácter de barra invertida (\).
+- \t: Hora actual en formato de 24 horas (HH:MM:SS).
+- \T: Hora actual en formato de 12 horas (HH:MM:SS).
+- \d: Fecha actual en el formato "día de la semana mes día".
+- \n: Nueva línea.
+- \r: Retorno de carro (mueve el cursor al principio de la línea).
+
+
+>>>>>>> refs/remotes/origin/main
