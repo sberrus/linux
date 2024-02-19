@@ -59,14 +59,4 @@ TEMP_ENV_VAR='this is a temporal env variable' python3 script.py
 
 En el ejemplo anterior, además de las variables definidas previamente, podremos enviar una variable temporal para que sea accedida por el script en esa ejecución, luego la variable desaparece. Esto es relevante sobretodo para cuando queremos tener un nivel más de protección para ciertas variables o información supersensible.
 
-### Varaible PATH
 
-Path define las rutas que va a utilizar el sistema para alojar los archivos ejecutables. Los archivos ejecutables que se encuentren en path, van a poder ser accedidos desde cualquier parte del sistema.
-
-Podemos modificar la variable PATH siempre y cuando respetemos las rutas críticas del sistema.
-
-### Variable SHELL
-
-La variable SHELL es la que define que programa va a utilizar como shell por defecto a la hora de definir una consola.
-
-Para modificar la shell por defecto lo haremos mediante el comando chsh -s "<ruta/shell>". Al momento de iniciar una nueva shell, por defecto se abrirá la que hayamos definido.
