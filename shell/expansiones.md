@@ -58,3 +58,19 @@ Por lo que si queremos realizar lo mismo que habíamso dicho antes pero con el P
 ```
 diff <(ls ./folder1) <(ls ./folder2) -> Esto pasara como 2 archivos temporales con el output de los dos ls y los utilizará diff para compararlos. Esto es útil porque diff solo acepta archivos para comparar
 ```
+
+Sabemos que hay procesos que no leen archivos directamente por referencia por lo que si queremos pasar como stdin un archivo que tengamos en un temporal tendremos que hacerlo de la siguiente manera:
+
+```
+echo < <(ls)
+```
+De esta forma respetando el espacio entre ellos, podemos primero ejecutar el comando ls el cual usará como pwd la ruta de los archivos temporaltes `/dev/fd`, luego enviará ese archivo temporal a echo como un stdin mediante el uso del segundo `<`
+
+El orden de procesos del script anterior vendría siendo el siguiente:
+
+1. Se ejecuta el comando ls desde. Cabe destacar que como esta dentro de <() se va a ejecutar en la ruta de los ficheros temporales (/dev/fd).
+2. Luego, al estar dentro de un <(), se almacena el stdout del ls en un archivo temporal.
+3. Luego pasamos ese fichero como un stdin mediante el otro <. Cabe destacar que podemos pasar cualquier fichero como stdin de esta forma. No necesariamente debe ser un temporal.
+4. El comando echo ejecuta usando el stdin.
+
+

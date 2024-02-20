@@ -99,5 +99,3 @@ En el PS1 podemos definir una serie de variables especiales que PS1 se va a enca
 - \n: Nueva línea.
 - \r: Retorno de carro (mueve el cursor al principio de la línea).
 
-
->>>>>>> refs/remotes/origin/main
