@@ -71,3 +71,27 @@ La principal diferencia entre ambos es su forma de almacenar la información. Lo
 Los symlink son útiles para crear enlaces, puntos de acceso comodo a cietos ficheros o directorios. Lo que pasa con los symlinks es que al momento en que la ruta no es alcanzable ej: cuando tenemos un symlink apuntando a una unidad desmontable, cuando esta unidad no se encuentra en el sistema, el symlink se rompe.
 
 La útilidad depende de para que se quiera usar alguna de las soluciones.
+
+## Inode Limit
+
+Todos los inodes se almacenan de manera centralizada, este espacio es especificado en el momento en el que configuramos el filesystem del sistema. Este espacio no puede ser utilziado para ninguna otra cosa.
+
+Para ver cuantos inodes estan siendo usados utilizamos el comando `df -ih`
+
+**El comando df sirve para mostrar información acerca del espacio del sistema. También sirve para saber el tamaño que ocupa un directorio**
+
+Esto nos va a devolver una tabla de discos los cuales muestra los inodes disponibles, los utilizados etc...
+
+Por lo general el inode suele tener suficiente espacio para operar, pero puede pasar que por algún motivo nos quedemos sin espacio de inodes disponibles. Eso hará que lso programas crasheen o que no puedan ser accedidos.
+
+Para solucionar este problema, podemos eliminar varios ficheros antiguos o podemos comprimirlos en un .tar
+
+Otra solución es recrear todo el file system y aumentar el tamaño del inode.
+
+También puedes aumentar el espacio de los inodes mediante una unidad externa.
+
+
+
+También puedes aumentar el espacio de los inodes mediante una unidad externa.
+
+
