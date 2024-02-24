@@ -8,11 +8,11 @@ Veremos brevemente algunos directorios y su importancia:
 
 - /bin -> binaries: Es el directorio que se encarga de almacenar los binarios necesarios para la gestión y el mantenimiento del sistema. En los sistemas actuales, la ruta /bin es un symlink a /usr/bin.
 
-- /boot -> boot folder: Esta carpeta es la encargada de configurar el boot del sistema. Es importante para el arranque del sistema.
+- /boot -> boot folder: Esta directorio es la encargada de configurar el boot del sistema. Es importante para el arranque del sistema.
 
-- /dev -> devices folder: Esta es la carpeta de los dispositivos. Mediante esta tenemos ficheros que nos permiten interactuar con los distintos dispotivos.
+- /dev -> devices folder: Esta es la directorio de los dispositivos. Mediante esta tenemos ficheros que nos permiten interactuar con los distintos dispotivos.
 
-- /etc -> configurations: Esta es la carpeta que se encarga de almacenar los archivos de configuración del sistema y sus programas.
+- /etc -> configurations: Esta es la directorio que se encarga de almacenar los archivos de configuración del sistema y sus programas.
 
 - /home -> directorios de usuarios: Es el directorio en cargado de almacenar los ficheros y directorios de los usuarios del sistema.
 
@@ -38,4 +38,22 @@ Veremos brevemente algunos directorios y su importancia:
 
 - /tmp -> temporary files: Es similar a /run. Son archivos temporales que son eliminados al momento de reiniciar el sistema.
 
-- 
+- /usr -> Este directorio es especial ya que es el encargado de almacenar los archivos y binarios que necesita el sistema. En los sistemas actuales es el encargado de almacenar todos los binarios, esto despues de adaptar el usrmerge el cual permite tener en un solo lugar toda la inforamación y binarios necesarios para el sistema. 
+
+Antiguamente se tenian el resto de directorios por temas de rendimiento y por las limitaciones que antiguamente tenían los sistemas para  /usr -> Este directorio es especial ya que es el encargado de almacenar los archivos y binarios que necesita el sistema. En los sistemas actuales es el encargado de almacenar todos los binarios, esto despues de adaptar el usrmerge el cual permite tener en un solo lugar toda la inforamación y binarios necesarios para el sistema. 
+
+Antiguamente se tenian el resto de directorios por temas de rendimiento y por las limitaciones que antiguamente tenían los sistemas para almacenar estos binarios. En la actualidad al tener equipos más potentes se implemento el `usrmerge`el cual permitio que todos los binarios se encuentren en la ruta /usr. 
+
+El directorio /usr se suele usar para compartir datos y binarios dentro de una red.
+
+- /usr/local -> A diferencia de /usr, la directorio /usr/local es para binarios que no estan pensados para ser compartidos con otras máquinas. Este es especifico para binarios y datos que sean necesarios para la máquina anfitriona.
+
+- /var -> variable data: Esta directorio es la encargada de almacenar toda la información variable dentro de nuestro sistema. Por lo general es donde se guardan todos los ficheros que los distintos programas tienden a usar para manipular información, es el directorio donde se guardan los archivos de servidores http, las bbdd, etc... 
+
+En el momento de hacer backups del sistema, esta carpeta suele ser de las primordiales que necesitamos para no perder información importante.
+
+- /snap : Las distintas distros de linux tienen diferentes gestores de aplicaciones. En ubuntu es apt, en centOS es dnf, cada uno tiene una manera de instalar y gestionar las instalaciones de los paquetes. 
+
+Esta ruta suele almaceanar también binarios descargados.
+
+- /lost+found: Este directorio se encarga de almacenar información que no ha sido guardada, es una especie de direcotrio backup para cuando el sistema falla y no nos ha dado tiempo de almacenar o guardar la inforamción. 
