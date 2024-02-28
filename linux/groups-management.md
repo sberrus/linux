@@ -74,5 +74,3 @@ Estos cambios al realizarlos con este comando, se actualizan tanto en /etc/group
 Para eliminar un grupo hacemos uso del comando `groupdel <group>`. Es imporante destacar que este comando solo elimina al grupo, no elimina ni los ficheros y nada fuera de esto.
 
 Este comando no funciona con los grupos primarios de los usuarios.
-
-

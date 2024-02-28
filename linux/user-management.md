@@ -78,3 +78,11 @@ Para modificar el grupo de un usuario usamos el comando `usermod` con las siguie
 ## INFORMACION IMPORTANTE
 
 Para agregar o eliminar tanto usuarios como grupos, no debemos modificar directamente estos archivos ya que podrían generar errores que el sistema no esta preparado para manejar. Estos archivos son de solo lectura, para realiar tareas de añadir o eliminar, hay comandos que nos permiten hacerlo además de preparar el resto del sistema para que este no falle.
+
+## Cambiar entre usuarios dentro de la consola
+
+Para cambiar de usuarios usamos el comando `su <usuario>`. Si usamos el comando `su` sin especificar usuario se intentará logear al usuario root.
+
+Por defecto el usuario root no tiene contraseña por lo que deberemos asignarle una con el comando `passwd`. Esto no se recomienda por seguridad.
+
+Para quitarle nuevamente la contraseña al usuario root usamos el comando `passwd -dl` de esta forma quitamos la contraseña y además bloqueamos el usuario para que sea inaccesible.
