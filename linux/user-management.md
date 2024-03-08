@@ -39,4 +39,4 @@ Por columnas podemos ver que el primer campo es el usuario, luego la P indica qu
 	- Evitar conceder permisos innecesariamente a los usuarios.
 	- Evitar en lo posible dar permisos de escritura (w) a los usuarios a ficheros que no sea necesarios que vaya a necesitar.
 - Mantener actualizados los grupos de manera que podamos evitar que usuarios que ya no vayan a formar parte de ciertos equipos o que ya no formen parte de la organización, puedan seguir accediendo a los recursos que se les tenga asignados.
-- Regularmente hacer reviews acerca de los permisos de los grupos, si a los usuarios les hacen falta más o si estos cuentan con demasiados permisos.
+- Regularmente hacer reviews acerca de los permisos de los grupos, si a los usuarios les hacen falta más o si estos cuentan con demasiados permisos. 
