@@ -17,8 +17,25 @@ Los procesos son manejados por el kernel, este es el que se encarga de asignar l
 Cada proceso tiene las siguientes características:
 
 - PID: Process id. La identificación única de los procesos en el sistema.
-- user: El usuario que ha ejecutado dicho proceso.
-- state: Un stado en el cual se puede encontrar el proceso (running | waiting | stopped | zombie).
+- User: El usuario que ha ejecutado dicho proceso.
+- State: Un stado en el cual se puede encontrar el proceso (running | waiting | stopped | zombie).
+- Parent ID: El id del proceso padre del proceso que estamos consultando, en el caso de tenerlo.
 - otros...
 
+## Revisar los procesos en ejecución
 
+Para ver los procesos en ejecución tenemos el comando `ps` -> process status. Este comando nos lista los procesos que estan en este momento en ejecución en el sistema. Por defecto muestra los procesos que esta ejecutando el TTY en ese momento.
+
+Con el uso de las flags, podemos tener comportamientos diferentes como:
+
+- `ps -e | ps -A`: Se muestran todos los procesos de todos los usuarios y sesiones.
+- `ps -f`: Muestra los procesos con información extendida.
+alias lt='ls -lht --color'
+- `ps -l`: Muestra la información en formato long, con más información.
+- `ps -p <proceso,proceso>`: Con este comando podemos ver la información de un proceso en especifico. También podemos listar varios procesos si lo necesitamos.
+- `ps --forest`: ver los procesos como tree.
+- `ps aux`: Ver la información extendida de los procesos siguiendo el estandar BSD, este estandar es los que se suelen basar los sistemas BSD.
+
+### ruta /proc/[prod_id]
+
+Otra de las maneras que tenemos de obtener información de los procesos es mediante la ruta `/proc/[proc_id]/`, en este directorio tenemos 3 ficheros que contienen información relacionada con el proceso que estamos consultando.
