@@ -36,4 +36,33 @@ Estos son procesos que ya han finalizado su ejecución, pero el padré no ha ges
 
 Estos procesos no ocupan memoria ni CPU pero si ocupan un slot en la tabla de procesos el cual tiene un máximo de slots disponibles y tendrá más o menos dependiendo del sistema.
 
+Para ver el máximo de procesos que pueden correr al mismo tiempo en nuestra máquina debemos ver el contenido del fichero `/proc/sys/kernel/pid_max`
 
+Los procesos zombies los podemos localizar facilmente con el comando `ps -l` el cual lista todos los procesos con una letra en mayuscula en la segunda columna indicando el tipo de proceso que es. Los procesos zombiesestan definidos con una `Z`.
+
+## Estados de los procesos
+
+Los estados de los procesos es la forma que tenemos de ver en que estado se encuentra un proceso de forma rápida. Esto lo hacemos mediante el comando `ps -l`. Cuando ejecutamos el comando veremos un lgo como el siguiente:
+
+``` salida comando ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   11812   11780  0  80   0 -  2333 do_wai pts/2    00:00:00 bash
+```
+
+Como podemos ver, nos muestra la lista de procesos en el formato long. En la segunda columna, podemos ver el estado del proceso. Tenemos distintos estados de los procesos como los que veremos a continuación:
+
+- R (running): Este estado indica que el proceso se encuentra ejecutando en la máquina consumiendo en ese momento CPU.
+
+- S (sleeping): Este estado indica que el proceso esta durmiendo, la diferencia entre (S) y (R), siendo ambos casos para proceoss abiertos, radica en que los procesos en estado (S) son los procesos que estan abiertos pero que no estan siendo interactuados por ningún usuario en ese momento. Por lo que se mantienen en estado (S) y consumen menos recursos que en estado (R).
+
+- D (uninterruptible sleep): Este estado indica que el proceso en cuestión esta en un estado parecido a (S) pero que no admite ninguna señal por parte del kernell. Esto suele ser utilizado pro procesos (I/O) los cuales esten leyendo un fichero o tratandolo para realizar operaciones.
+
+Hay veces en los que por ciertos factores, un proceso puede quedarse en estado (D), para pararlo, la única forma que tenemos es usando la señal SIGKILL.
+
+- T (traced or stopped): Este estado indica que le proceso ha sido pausado mediante la señal SIGSTOP,SIGTSTP o mediante ptrace para debugging. Este no volverá al estado (R) hasta que mandemos la señal SIGCONT.
+
+- Z (zombie): Este estado indica que el proceso esta en estado zombie por lo que la única vía que tiene este proceso es salir.  
+
+## programa `top` `htop`
+
+top y htop, son dos programas que usualmente vienen instalados en los sistemas que nos permiten ver todos los programas e información del sistema relativo al consumo de memoria y CPU de la máquina. Siendo htop más moderno.
