@@ -16,4 +16,4 @@ Para asignar el niceness de un programa hacemos uso del comando `nice -n <nicene
 
 Para definir la prioridad de un proceso en ejecución, hacemos uso del comando `renice -n <niceness> <process_id>`, para modificar el niceness de un proceso ya en ejecución.
 
-
+El porqué el niceness va de valor negativo a positivo respecto a prioridad es debido a la compatibilidad de esta configuración con configuracaiones antiguas de UNIX y también, debido a que un proceso con más niceness, se le considera un proceso más "amigable" con el resto de procesos, por lo que no consume tantos recursos.
