@@ -80,7 +80,11 @@ En ambos casos indica un cierre ordenado del programa, lo que significa que indi
 
 Para los daemons (procesos en segundo plano) esta señal indica que debe reiniciar la configuración del proceso.
 - SIGSTOP: Esta señal indica al proceso que debe ponerse en estado de pausa. No hay forma de hacer que un proceso ignore esta señal. Para que el proceso vuelva a ejecutar, debemos pasarle la señal SIGCONT.
+
+- SIGTSTP (ctrl + z): Es una señal que nos permite poner un proceso en suspensión pero de una forma más amigable con el proceso al cual se lo enviamos. usualmente se utiliza para pasar a los jobs en ejecución.
+
 - SIGCONT: Para reanudar la ejecución de un proceso que ha sido pausado. Cabe destacar que el proceso puede ser un proceso hijo, por lo que si hay un proceso que afecta a una terminal y lo paramos, podemos ejecutar el proceso nuevamente en la misma terminal que ha ejecutado. 
+
 
 ## Diferencias entre kill /usr/bin/kill vs /bin/kill
 
