@@ -20,4 +20,12 @@ Se debe tener en cuenta que las dependencias listadas en Pre-Depends, Depends y 
 
 ## Resolucion de conflicto entre dependencias
 
+En esta sección veremos como se puede manejar las dependencias para resolver conflictos y como podemos gestionarlas.
 
+Estos tipos de errores pueden pasar cuando se esta haciendo un `upgrade` del sistema, haciendo que este tenga este tipo de errores y hay que gestionarlos de manera correcta.
+
+En el caso de que hayan problemas de compatibilidad en ciertas dependencias lo que podemos hacer es lo siguiente para resolver problemas de dependencias de manera manual:
+
+- Lo primero que podemos hacer es intentar descargar de nuevo la dependencia con el flag -f a la hora de hacer el apt install el comando sería el siguiente: `apt install -f <dependencia>`. De esta forma estamos instalando la dependencia mediante `apt` mediante el uso de --fix-broken. De esta forma dejamos que apt maneje, gestione e instale las dependencias.
+
+- 
