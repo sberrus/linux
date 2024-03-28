@@ -28,4 +28,19 @@ En el caso de que hayan problemas de compatibilidad en ciertas dependencias lo q
 
 - Lo primero que podemos hacer es intentar descargar de nuevo la dependencia con el flag -f a la hora de hacer el apt install el comando sería el siguiente: `apt install -f <dependencia>`. De esta forma estamos instalando la dependencia mediante `apt` mediante el uso de --fix-broken. De esta forma dejamos que apt maneje, gestione e instale las dependencias.
 
-- 
+- La otra forma es instalar las dependencias una a una hasta que todas satisfagan las necesidades del paquete que estamos intentado instalar.
+
+- Podemos también eliminar el paquete que esta generando los conflictos. Esto en el caso de que la prioridad sea la integridad del sistema.
+
+- Podemos, en casos especiales en los cuales tengamos tiempo para comprobar que todo el sistema esta funcionando correctamente, hacer un update/full-upgrade al sistema para que este se encargue de tener todos los paquetes con las últimas versiones de todo.
+
+### Recomendaciones para evitar problemas con las dependencias
+
+Para evitar problemas con las dependencias cuando estemos trabajando con sistemas Linux, lo que debemos evitar es lo siguiente:
+
+- Evitar usar repositorios de terceros.
+- Evitar instalar dependencias .deb de ser posible.
+- Intentar siempre que sea posible instalar las dependencias directamente desde el repositorio de ubuntu o de la distro que estes utilizando.
+- Si se esta pensando en actualizar el sistema, siempre tomar en cuenta el tiempo necesario para realizar todas las actualizaciones necesarias.  
+- Crear un backup completo del sistema antes de realizar cualquier tarea de actualización.
+- Intentar usar las versiones LTS (Long Term Support) especialmente si estamos trabajando con algun servidor.
