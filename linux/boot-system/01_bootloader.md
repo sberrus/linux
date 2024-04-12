@@ -6,6 +6,4 @@ En esta sección, nos adentraremos en el sistema de boot del sistema y como este
 
 Es importante saber que la bios esta gestionada por la placa base por lo que no forma parte del dominio que estamos viendo que en este caso es linux.
 
-- Luego la bios se encarga de ejecutar GRUB2 que es el primer software que los sistemas linux ejecutan cuando una máquina se enciende. Este se encarga de cargar la kernel en la memoria de la máquina. En este paso podemos indicar si inicialice linux directamente o si tenemos otros sistemas instalados podemos indicar que nos deje seleccionar el sistema con el que queremos arrancar.
-
-- 
+- Luego la bios se encarga de ejecutar GRUB2 que es el primer software que los sistemas linux ejecutan cuando una máquina se enciende. Este se encarga de cargar la kernel en la memoria de la máquina. En este paso podemos indicar si inicialice linux directamente o si tenemos otros sistemas instalados podemos indicar que nos deje seleccionar el sistema con el que queremos arrancar. 
