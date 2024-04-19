@@ -4,7 +4,7 @@
 
 Este, al ser el primer programa que el SO ejecuta, este siempre va a tener el PID 1. Esto podemos comprobarlo usando el siguiente comando:
 
-```salida comando `ps 1`
+```salida comando ps 1
 PID TTY      STAT   TIME COMMAND
   1 ?        Ssl    0:00 /init
 ``` 
