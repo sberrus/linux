@@ -33,4 +33,7 @@
 - pgrep <process_name>: show the id of a given process.
 - nice: run a process with a given niceness.
 - renice: change a running process niceness.
-- 
+
+## networking 
+- ip: Inspect network data
+

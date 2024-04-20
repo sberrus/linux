@@ -39,3 +39,11 @@ Siempre que se vaya a modificar aspectos del kernel como pueden ser los modulos,
 Una de las cosas que podemos hacer es, si no queremos que la actualización del kernel rompa el sistema o que entre en conflicto con otros modulos que dependan de la versión en especifico que estamos usando, podemos usar el comando `apt-mark hold <version_de_kernel>` de esta forma evitamos que a la hora de hacer un `apt upgrade`, este reviente los otros modulos.
 
 ## Como nos comunicamos con el hardware (User space, Kernel space)
+
+El kernel, como bien hemos indicado anteriormente, se encarga de comunicar las interacciones del usuario con el hardware y viseversa, esto lo realiza mediante capas de abstracción que podríamos listar de la siguiente manera:
+
+- Capa de usuario: Es la capa donde el usuario interactua directamente con el sistema, esto puede ser bash, firefox, GUI-apps, systemd, o la libreria standard de C por ejemplo, entre otros.
+- Capa de kernel: Este se encarga en manejar la abstracción entre el hardware y el usuario. Aquí se manejan las `system calls` siendo estas las que realmente se encargan de interactuar con el hardware donde se requiera. 
+- Capa fisica del hardware: Son los componentes de hardware que componen nuestro dispositivo (Memoria, almacenamiento, redes, etc...)
+
+
