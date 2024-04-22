@@ -76,5 +76,5 @@ Podemos ver información y realizar acciones con `systemctl` de la siguiente man
 - Ver la lista de units que hay en nuestra máquina: service --status-all | systemctl list
 - Ver el status del unit: service <unit> status | systenctl status <unit>
 - Modificar el status del unit: service <unit> {start|stop|graceful-stop|restart|reload|force-reload} | systemctl {start|stop|restart|reload} <unit>
-	start, stop y restart, son lo que suelen indicar. En el caso de reload, lo que hace es recargar la configuarción del unit. Esto no es propio de systemd, por lo que se deberá tener configurado el unit para que permita esta opción..
-
+	- start, stop y restart, son lo que suelen indicar. En el caso de reload, lo que hace es recargar la configuarción del unit. Esto no es propio de systemd, por lo que se deberá tener configurado el unit para que permita esta opción..
+	- En el caso de `status`, no hace falta 
