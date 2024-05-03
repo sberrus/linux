@@ -1,9 +1,7 @@
 # CGROUP
 Esta es una caracteristica que nos ofrece el Kernell de Linux que nos permite asignarle recursos jerarquicamente a los procesos.
 
-Es una forma de poder asignarle recursos finitos y que los procesos y los hijos de estos procesos, no puedna coger más recursos.
-
-En un mismo cgroup pueden haber multiples procesos además de otros cgroup.
+Es una forma de poder asignarle recursos finitos y que los procesos y los hijos de estos procesos, no puedna coger más recursos un mismo cgroup pueden haber multiples procesos además de otros cgroup.
 
 Entre las cosas que podemos hacer con cgroup serían:
 
@@ -87,3 +85,21 @@ Para definir un target predeterminado del sistema usamos el comando `sudo system
 
 Para ejecutar un target, podemos usar el comando `sudo systemctl isolate <target>`
 
+## programar units para que se ejecuten al arrancar la máquina
+
+Para configurar un unit que se inicialice al momento de arrancar la máquina debemos indicarlo mediante el comando `systemctl enable --now <service>`, de esta forma, al arrancar el sistema, el servicio se ejecutará automáticamente.
+
+Con la ejecución de este comando, lo que hará el sistema es leer el <service> y lo define para que se ejecute al momento en el que arranca el sistema.
+
+En el caso de que queramos que un programa que arranca de forma predeterminada con el sistema, ya no lo haga; lo indicamos con el comando `systemctl disable <service>`. 
+
+Y para parar cualquier programa definido en systemctl como un .service, hacemos uso del comando `systemctl disable <service>` 
+
+Lo que hace el comando es crear un symlink y lo añade al directorio especial `/etc/systemd/system/multiuser.target.wants` En este directorio se encuentran symlinks de los distintos .targets .mounts .units etc... que se ejecutan al momento de que se ejecuta el target multi-user.target siendo este el unit principal que ejecuta el sistema. 
+
+## Formato de un fichero unit
+
+Los ficheros unit tienen distintas secciones los cuales podemos desglozar de la siguiente manera:
+
+``` sección Unit
+[Unit] -> En la primera fila definimos el siguiente bloque el cual indicaque es un Unit.
