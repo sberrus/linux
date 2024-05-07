@@ -99,7 +99,16 @@ Lo que hace el comando es crear un symlink y lo añade al directorio especial `/
 
 ## Formato de un fichero unit
 
-Los ficheros unit tienen distintas secciones los cuales podemos desglozar de la siguiente manera:
+Los ficheros de control tienen difernetes secciones las cuales estan agrupadas luego del nombre de la sección de la siguiente forma -> [sección]; dentro de estas tienen distintos campos y directricez que demarcaran el comportamiento del unit en cuestión. Dicho esto, podemos encontrar las siguientes secciones:
 
-``` sección Unit
-[Unit] -> En la primera fila definimos el siguiente bloque el cual indicaque es un Unit.
+[Unit]: Este define la configuración general del unit.
+- Description: Añade una breve descripción de que es lo que hace el unit.
+- Documentation: Enlaces para documentación relevante para el unit.
+- Requires: Lista de units que deben estar activados antes de que el unit inicialice. Si alguno de estos units requeridos falla, el unit objetivo va a fallar también.
+- Wants: Es parecido a Requires, pero con la diferencia es que en el caso de que alguno de los units especificados aquí falla, el unit objetivo puede continuar con la ejecución sin problema, es útil para ucando tienes units opcionales.
+- After: Indica que el unit objetivo debe empezar después de que hayan inicializado los units especificados aquí. Ayuda a definir el orden en el cual los units ejecutan.
+- Before: Indica que el unit objetivo debe ser ejecutado antes que los units especificados en esta sección.
+- Conflicts: Indica los units con los que en el caso de que esten activos al momento de iniciar el unit objetivo, los desactiva para que no entren en conflict- Conflicts: Indica los units con los que en el caso de que esten activos al momento de iniciar el unit objetivo, los desactiva para que no entren en conflicto.
+
+[Service]: En este definimos como y cuando el servicio es inicializado, cuando se debe parar.
+[Install]: Este define como el servicio debe ser instalado.
