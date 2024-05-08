@@ -109,6 +109,20 @@ Los ficheros de control tienen difernetes secciones las cuales estan agrupadas l
 - After: Indica que el unit objetivo debe empezar después de que hayan inicializado los units especificados aquí. Ayuda a definir el orden en el cual los units ejecutan.
 - Before: Indica que el unit objetivo debe ser ejecutado antes que los units especificados en esta sección.
 - Conflicts: Indica los units con los que en el caso de que esten activos al momento de iniciar el unit objetivo, los desactiva para que no entren en conflict- Conflicts: Indica los units con los que en el caso de que esten activos al momento de iniciar el unit objetivo, los desactiva para que no entren en conflicto.
-
+- AllowIsolate: Esta directriz en principio lo que permite es que esta unit pueda ejecutar de forma aislada, siendo este y los units que considere necesarios para poder funcionar los únicos que esten ejecutando al momento de ejecutar el comando `systemctl isolate <target>`.
 [Service]: En este definimos como y cuando el servicio es inicializado, cuando se debe parar.
+- Type: define el tipo de proceso y el comportamiento de inicialización. Dentro de este campo podemos asignar unos valores predefinidos que realizan lo siguiente:
+	- simple: este valor indica que se comporte de la manera habitual, cuando este unit se ejecuta se mantiene activo en al terminal hasta que este finalice. Este es el valor por defecto de de los units.
+	- forking: Este valor indica al servicio que se debe ejecutar en segundo plano. Esto es útil para cuando necesitamos que un servicio se ejecute en segundo plano mientras que el proceso principal continua con la ejecución. Es una forma de bifurcar de manera que un mismo servicio pueda realizar tareas en paralelo.
+	- oneshot: Esto indica al servicio que debe ejecutarse solo una vez.
+- ExecStart: Este es el comando que se va a ejecutar, este campo admite argumentos y opciones. Debes declarar todo explicitamente debido a que en este campo no puedes usar expansiones, ni redirecciones, ni pipes.
+- ExecStop: Este es el comando que necesitamos para parar el servicio. Este campo es opcional, de forma predeterminada, el kernel envia la señal correspondiente para matar el proceso y sus hijos y listo; pero si necesitamos un comportamiento más sofisticado, podemos hacer uso de este campo para definir un script que tenga dicho comportamiento de stop del servicio.
+- Restart: En este campo podemos indicar valores que dependiendo de cierto comportamiento del serivicio, este puede reiniciarse. Podemos indicarle los siguientes:
+	- on-success: Si todo sale ok.
+	- on-failure: Si falla.
+Hay más valores que podemos indicarle como on-abnormal, on-abort, always, etc. Cada uno de estos va a depender o del retcode del proceso o de la señal enviada al mismo para disparar el reinicio.
+- User: Especifica el usuario el cual va a ser el que ejecuta el servicio. Si definimos este campo, definimos con cual va a ser el usuario propietario de dicho servicio.
+- Environment: Definimos variables de entorno que usualmente van a ser usadas por el servicio.
+
 [Install]: Este define como el servicio debe ser instalado.
+
