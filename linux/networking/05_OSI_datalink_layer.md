@@ -50,3 +50,23 @@ Los primeros 3 bytes contiene la información del manufacturador y los últimos 
 Usualmente suelen ser valores estáticos, pero hay ciertos dispositivos que permiten modificar el mac address mediante el sistema haciendo algo que se llama `spoofing`.
 
 Cada una de las interfaces que componen nuestro dispositivo tienen su propia dirección MAC.
+
+Con herramientas como WireShark, podemos monitorizar y observar tanto las direcciones de destino como las fuentes MAC de las llamadas de la red en la que nos encontramos. Esto es realmente útil para cuando queremos realizar tareas de inspección y trazas de las mismas.
+
+Podemos ver por ejemplo las conexiones que realiza un dispositivo con el router y viceversa.
+
+En los datos binarios que nos muestra la herramienta también nos muestra resaltadas, cual de esos datos son los datos relacionados con la fuente y el destino.
+
+## Puentes comunes de comunicación en Data Link Layer
+
+Esto se refiere a los medios por los cuales podemos encontrarnos con la información del Data Link Layer, y estos son los siguientes:
+
+- Bridge
+- Switch (Ethernet) ** Algunos switches ya son parte del Layer 3 porque tienen capacidades de enrutamiento.
+- Wireless Access point. La wifi de toa la vida.
+
+Existe la posibilidad de tener directamente las máquinas conectadas en el mismo cable, lo que hacen las máquians es enviar Frames por la red y la máquina destino es la que trabaja con esos datos; el resto de máquinas directamente ignoran los paquetes los cuales no son destinados para ellos.
+
+Si lo anterior es posible, al momento de tener muchos dispositivos conectados al mismo cable puede ocasionar multiples problemas ya sean físicos como que un dispositivo o muchos, no tenga contacto con esta red debido a que en algún lugar del cable se ha roto; o de congestión, entre otros.
+
+Para resolver este problema, se han diseñado los switches, estos dispositivos se encarga de intercomunicar todos los dispositivos conectados a la red, memoriza sus MAC y cuando un dispositivo A, se quiere conectar con el dispositivo B, envía el Frame única y exclusivamente a ese dispositivo.
