@@ -1,6 +1,6 @@
 # Data Link layer
 
-En este punto ya tenemos en el layer anterior (physical layer) definida la conexión entre distintos nodos dentro de una red, ya definido esto debemos identificar de alguna forma de donde procede la información, a donde va dirigida, quien la envía etc. De este proceso en particular es en el que nos vamos a enfocar en esta sección.
+En este punto ya tenemos en el layer anterior (physical layer) definida la conexión entre distintos nodos dentro de una red, ya definido esto debemos identificar de alguna forma de donde procede la información, a donde va dirigida, quien la envía etc. De este proceso en particular es en el que nos vamos a enfocar en esta sección. Es importante tener en cuenta que para este layer, los dispositivos tienen que estar conectados directamente, de lo contrario ya entraría en terreno de el layer 3.
 
 En este punto también nos encargamos de recoger multiples bits y agruparlos en frames, estos frames no son más que grupos de bits. Los frames es la unidada en la que el data link layer mide las cosas.
 
@@ -69,4 +69,6 @@ Existe la posibilidad de tener directamente las máquinas conectadas en el mismo
 
 Si lo anterior es posible, al momento de tener muchos dispositivos conectados al mismo cable puede ocasionar multiples problemas ya sean físicos como que un dispositivo o muchos, no tenga contacto con esta red debido a que en algún lugar del cable se ha roto; o de congestión, entre otros.
 
-Para resolver este problema, se han diseñado los switches, estos dispositivos se encarga de intercomunicar todos los dispositivos conectados a la red, memoriza sus MAC y cuando un dispositivo A, se quiere conectar con el dispositivo B, envía el Frame única y exclusivamente a ese dispositivo.
+Para resolver este problema, se han diseñado los switches, estos dispositivos se encarga de intercomunicar todos los dispositivos conectados a la red, memoriza sus MAC y cuando un dispositivo A, se quiere conectar con el dispositivo B, envía el Frame única y exclusivamente a ese dispositivo. Además de ofrecer otras ventajas en comparación a la conexión mediante cable directamente.
+
+Los otros dispositivos no saben que dispositivos estan conectados a ese switch.
