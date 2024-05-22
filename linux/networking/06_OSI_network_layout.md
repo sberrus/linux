@@ -45,4 +45,8 @@ Las direcciones 192.168.1.0 suele indicar la ip del gateway de la red; y la dire
 
 Una de las utilidades de las subnetmask es que ayuda a especificar el tamaño de una red. Ya sabiendo que la subnetmask es 255.255.255.0 sabes que hay disponibles 254 hosts; o si vemos una subnet 255.255.254. ya podemos intuir que esa red tiene mas de 500 hosts en la red.
 
+## ¿Cómo podemos ver que dispositivos estan conectados a nuestra red?
+
+Con wireshark, podemos detectar un broadcast en el protocolo ARP que al momento de conectarse a la red, pregunta por la ip que este disponible para poder conectarse a ella. hay que buscar por el protocolo ARP el texto "Who is <ip_addr>".
+
 
