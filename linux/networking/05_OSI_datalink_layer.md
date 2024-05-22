@@ -27,6 +27,7 @@ Este protocolo se compone de una familia de tecnologias usualmente interconectad
 
 Este protocolo se basa en separar datos en frames de usualmente 1.5kb de tamaño, aunque esto puede variar dependiendo de las necesidades de la LAN.
 
+<<<<<<< HEAD
 En estos frames se encuentra la información que queremos transferir entre dispositivos. Además de algunos checksums que ayudan al receptor a saber si la información ha sido recibida correctamente, también contiene información de MAC de la interfaz que ha realizado el envío de la información y el receptor de la misma.
 
 ## WiFi IEEE 802.11
@@ -72,3 +73,4 @@ Si lo anterior es posible, al momento de tener muchos dispositivos conectados al
 Para resolver este problema, se han diseñado los switches, estos dispositivos se encarga de intercomunicar todos los dispositivos conectados a la red, memoriza sus MAC y cuando un dispositivo A, se quiere conectar con el dispositivo B, envía el Frame única y exclusivamente a ese dispositivo. Además de ofrecer otras ventajas en comparación a la conexión mediante cable directamente.
 
 Los otros dispositivos no saben que dispositivos estan conectados a ese switch.
+
