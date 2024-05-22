@@ -34,3 +34,15 @@ Las subnets son redes dentro de otras redes. Esto nos permite dentro de una red 
 Para que esto quede claro tenemos que entender que para que una máquina se comunique con otra dentro de la misma red, se comunican mediante `frames`, en el caso de que se vayan a comunicar vía internet, se comunican vía paquetes.
 
 Para simplificar, una subnet es una red dentro de otra red, por lo que una red wifi domestica es una subnet de internet y así... 
+
+## Subnet Mask
+
+La subnetmask es una forma que tienen las redes de aislar los dispositios de una red de otras redes. Suele tener una nomenclatura similar a la siguiente 255.255.255.0. Esto permite aplicar una regla de `logical AND` a la ip de fuente y destino el cual si la regla aplica, permite enviar un paquete de una interfaz dentro de la misma subnet.
+
+Las máscaras de red se componen de una IP de 32 bits seguidos por tantos 1 como amplia sea la máscara en bits. EJ: la mascara `255.255.255.0` es igual a `11111111.11111111.11111111.00000000`. Hay que tener encuenta que las máscaras, se componen de `1` consecutivos hasta donde indique el CIDR, desde ese punto se empiezan a definir `0` hasta que se completen los 32 bits. Por lo que /24 indica que la posición donde empiezan a haber `0` es a partir de la posición 24, por lo que la subnetmask de /24 seria 255.255.255.0.
+
+Las direcciones 192.168.1.0 suele indicar la ip del gateway de la red; y la dirección 192.168.1.255 indica la IP-BROADCAST la cual es utilizada para enviar mensajes a todos los dispositivos conectados a la red.
+
+Una de las utilidades de las subnetmask es que ayuda a especificar el tamaño de una red. Ya sabiendo que la subnetmask es 255.255.255.0 sabes que hay disponibles 254 hosts; o si vemos una subnet 255.255.254. ya podemos intuir que esa red tiene mas de 500 hosts en la red.
+
+
