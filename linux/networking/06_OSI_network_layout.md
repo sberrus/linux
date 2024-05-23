@@ -49,4 +49,16 @@ Una de las utilidades de las subnetmask es que ayuda a especificar el tamaño de
 
 Con wireshark, podemos detectar un broadcast en el protocolo ARP que al momento de conectarse a la red, pregunta por la ip que este disponible para poder conectarse a ella. hay que buscar por el protocolo ARP el texto "Who is <ip_addr>".
 
+## Cambiar la dirección ip por una personalizada
 
+Podemos modificar la dirección IP de nuestras interfaces utilizando el comando `ip addr add <ip_address>/<prefix_length> dev <interface>`. Con el comando anterior, podemos asignar una ip personalizada.
+
+a su vez, podemos eliminar una dirección ip en el caso de que ya no la necesitemos con el comando `ip addr del <ip_address>/<prefix_length> dev <interface>`.
+
+Cuando se añade una ip a una interfaz de forma manual, tenemos 2 direcciones por las cuales los dispositivos pueden comunicarse con nosotros. Al ejecutar el comando `ip addr show`, veremos que en la interfaz a la cual hemos añadido otra dirección ip, veremos que esta tiene 2 líneas que empiezan con `inet ... scope global dynamic/secundary`, en estas veremos la dirección ip que hemos añadido y por la cual también será posible comunicarnos con la interfaz a la cual se la hayamos añadido.  
+
+### ¿Qué utilidades se le puede dar a esta caracteristica?
+
+Poder crear y asignar ips de esta forma tiene ventajas a la hora de crear entornos virtualizados como el caso de docker, que necesita ip's diferentes para poder isolar las peticiones entre contenedores, si se gestionan multiples sitios o servicios dentro de una misma máquina, lo cual ayuda a aislar la configuración en cada una de ellas. En el caso de los nodos de un cluster, podemos utilizar esta caracteristica para poder manejar la comunicación y el balanceo de carga de los peticiones. Pero principalmente, ante todo, es por seguridad, de esta forma podemos aislar peticiones y podemos controlar de manera más segura las conexiones creando reglas para cada una de las ip's. 
+
+Otra de las posibles utilidades es la de poder tener varias ip's para realizar pruebas ej. Balanceadores para comprobar que realmente se este equilibrando la carga.
