@@ -62,3 +62,27 @@ Cuando se añade una ip a una interfaz de forma manual, tenemos 2 direcciones po
 Poder crear y asignar ips de esta forma tiene ventajas a la hora de crear entornos virtualizados como el caso de docker, que necesita ip's diferentes para poder isolar las peticiones entre contenedores, si se gestionan multiples sitios o servicios dentro de una misma máquina, lo cual ayuda a aislar la configuración en cada una de ellas. En el caso de los nodos de un cluster, podemos utilizar esta caracteristica para poder manejar la comunicación y el balanceo de carga de los peticiones. Pero principalmente, ante todo, es por seguridad, de esta forma podemos aislar peticiones y podemos controlar de manera más segura las conexiones creando reglas para cada una de las ip's. 
 
 Otra de las posibles utilidades es la de poder tener varias ip's para realizar pruebas ej. Balanceadores para comprobar que realmente se este equilibrando la carga.
+
+## Inspeccionar las rutas
+
+Primero veremos que hace el comando `ip route show` y que significa:
+
+``` salida de comando ip route show
+
+default via 000.000.000.000 dev eth0 proto kernel
+000.000.000.000/20 dev eth0 proto kernel scope link src 172.24.32.104
+
+```
+
+La ip importante es la segunda la que tiene el tag de la interfaz y la que esta asociada a una subnet ya que esta es la que usa la red para identificar los paquetes a donde tienen que llegar.
+
+con el comando `ip route get <ip>`, podemos ver la ruta que el sistema utiliza para llegar a una ruta en especifico, por ejemplo. Si vemos que una ruta empieza por `<ip> via <ip>...` muestra que es una ruta que necesita buscar esa ip a traves de un GW. Si no vemos ninguna via diferente, es que podemos acceder a ella directamente debido a que esta en la misma red.
+
+En el caso de que por algún motivo querramos modificar el comportamiento de una ruta podemos añadir rutas diferentes al igual que podemso añadir ip's diferentes. Esto lo hacemos mediante los siguietnes comandos:
+
+- Añadir ruta: ip route add <ip_dest> via <gateway> dev <interfaz>
+- Eliminar ruta: ip route del <ip_dest> via <gateway> dev <interfaz>
+
+Toda esta configuración es necesaria y útil para cuando tenemos redes bastante complejas los cuales necesitamos tener un control más preciso de a que rutas estamos accediendo dentro de nuestra red y a cuales deseamos que se acceda desde fuera.
+
+De esta forma, puede haber un caso en el que por ejemplo, tenemos una subnet dentro de nuestra red que por las reglas de subnet mask, los paquetes que querramos enviar desde el dispositivo a la subnet dnetro de nuestra red, por las reglas de subnet mask, el sistema intente enviar estos paquetes mediante el gateway de acceso a internet. En el caso de que querramos enviar ese paquete a un dispositivo dentro de nuestra red, pero que no cumpla con las reglas de subnet mask, debemos hacer una nueva regla de route para que en lugar de utilizar la gw de internet, definamos la ip gw del router que contenga el dispositivo al cual queremos conectarnos.
