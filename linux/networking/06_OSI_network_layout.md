@@ -86,3 +86,23 @@ En el caso de que por algún motivo querramos modificar el comportamiento de una
 Toda esta configuración es necesaria y útil para cuando tenemos redes bastante complejas los cuales necesitamos tener un control más preciso de a que rutas estamos accediendo dentro de nuestra red y a cuales deseamos que se acceda desde fuera.
 
 De esta forma, puede haber un caso en el que por ejemplo, tenemos una subnet dentro de nuestra red que por las reglas de subnet mask, los paquetes que querramos enviar desde el dispositivo a la subnet dnetro de nuestra red, por las reglas de subnet mask, el sistema intente enviar estos paquetes mediante el gateway de acceso a internet. En el caso de que querramos enviar ese paquete a un dispositivo dentro de nuestra red, pero que no cumpla con las reglas de subnet mask, debemos hacer una nueva regla de route para que en lugar de utilizar la gw de internet, definamos la ip gw del router que contenga el dispositivo al cual queremos conectarnos.
+
+## DHCP
+
+Dynamic host configuration protocol o DHCP, es un mecanismo que tienen los dispostivos de red que, de manera automática, asignar la ip de los dispositivos que se conectan a la red. 
+
+Consta de los siguientes componentes:
+
+- DHCP Server: Es el manager general de este protocolo. Este se encarga de tareas como: almacenar las ip's en el pool de direcciones y también eliminarlas del mismo. En una red de hogar, por lo general, este proceso es manejado directamente desde el router.
+
+- DHCP Client: Son los dispositivos que se conectan a la red y a los que el Server le asigna una ip. Este es el que tiene que solicitar una ip y puede también soltarla de ser necesario.
+
+- DHCP Relay Agent: En el caso de redes complejas, este se encarga de redireccionar las peticiones de una red a una subnet, de manera que sirva de punto de acceso (GW) entre redes.
+
+Tecnicamente, las gestiones que se encarga el protocolo DHCP se encuentra en el Layer 4, principalmente en los procesos relacionados UDP; pero también gestiona ciertos procesos pertenecientes a Layer 3.
+
+### Procesos DHCP
+
+DHCP tiene unos procesos a la hora de asignar, eliminar y comprobar ip's como los siguientes:
+
+1. Discover: Lo primero que hace este protocolo, es enviar un mensaje de broadcast a toda la red con destino a `255.255.255.255`.
