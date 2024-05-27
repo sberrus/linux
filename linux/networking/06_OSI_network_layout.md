@@ -106,3 +106,4 @@ Tecnicamente, las gestiones que se encarga el protocolo DHCP se encuentra en el 
 DHCP tiene unos procesos a la hora de asignar, eliminar y comprobar ip's como los siguientes:
 
 1. Discover: Lo primero que hace este protocolo, es enviar un mensaje de broadcast a toda la red con destino a `255.255.255.255`.
+
