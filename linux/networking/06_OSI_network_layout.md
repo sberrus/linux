@@ -105,5 +105,46 @@ Tecnicamente, las gestiones que se encarga el protocolo DHCP se encuentra en el 
 
 DHCP tiene unos procesos a la hora de asignar, eliminar y comprobar ip's como los siguientes:
 
-1. Discover: Lo primero que hace este protocolo, es enviar un mensaje de broadcast a toda la red con destino a `255.255.255.255`.
+1. Discover: Lo primero que hace este protocolo, es enviar un mensaje de broadcast a toda la red con destino a `255.255.255.255`. Esta ip es especial ya que es la que utiliza el protocolo DHCP para escuchar emnsajes. Se podría imaginar como que es la ip del servidor DHCP aunque no es del todo correcto. El resto de dispositivos conectados a la red van a recibir este mensaje pero lo van a ignorar.
 
+2. Offer: El servidor DHCP responde a la solicitud con una IP y la inforamción relacioada con la misma.
+
+3. Request: Cuando el servidor devuelve una ip disponible, el dispositivo que esta solicitando dicha ip acepta la ip y la inforamción y manda un mensaje al servidor DHCP aceptando la nueva ip y su información.
+
+4. Acknowledge: En este paso, el servidor DHCP recibe el mensaje request del dispositivo que esta solicitando la ip y el servidor manda un mensaje de `Acknowledge` informando que ha confirmado la asignación de la nueva ip y la duración que va a tener el dispositivo con la misma.
+
+Este flujo se hace de esta manera cuando tenemos un dispositivo que queremos introducir nuevo en la red, en el caso de que queramos agregar un nuevo dispositivo a la red, el servidor DHCP va a recibir una `request` del dispositivo solicitando que se le vuelva a asignar la misma ip que tiene registrada anteriormente y luego se verá uin mensaje de `acknowledged`
+
+## Inspeccionando DHCP systemd-networkd
+
+`systemd-networkd` es una herramienta para realizar tareas de inspección de redes montada sobre networkd el cual permite realizar inspecciones del protocolo DHCP.
+
+Usualmente, cuando un dispositivo se conecta a una red, este ejecuta el protocolo DHCP para realizar las tareas de asignación y gestión de las ips dentro de la red. A nivel de sistema, cuando un dispositivo bootea, suele disparar también este protocolo para que busque una red a la cual conectarse.
+
+Para ver los logs de systemd-networkd podemos empezar viendo los logs de `journalctl -u systemd-networkd`. Con esta herramienta podemos hacer debug viendo que si todo parece estar en orden, podemos detectar un problema de red relacionado con DHCP. 
+
+Este log nos muestra la información de los dispositivos y además, podemos ver las solicitudes y las interacciones que hace nuestro dispositivo con los servidores DHCP correspondientes.
+
+Suele ser un punto de partida a la hora de hacer debug cuando se tienen problemas de red.
+
+## Inpeccionando DHCP con NetworkManager
+
+NetworkManager es otra herramienta que suelen tener ciertas distribuciones de Linux que se encargan de inspeccionar problemas relacionadso con la red. Suele estar presentes en distribuciones Linux CentOs o similares.
+
+En aspectos generales, es una alternativa a systemd-networkd.
+
+## Inspeccionando redes con la herramienta `ping`
+
+Esta es otra herramienta que podemos utilizar para realizar inspecciones de la red.
+
+Ping usa por debajo el protocolo ICMP (Internet Control Message Protocol) el cual utiliza para enviar paquetes `ICMP Echo request` al destinatario y si el destinatario soporta el protocolo ICMP (Casi todos lo soportan, suele haberse el caso de dispositivos que apagan este protocolo) devolvera una respuesta `ICMP Echo reply`.
+
+Esta es una forma rápida de comprobar si dos nodos estan conectados, en el caso de que se envíe el ping y no vuelva, significa que por el camino pueden haber problemas (ICPM apagado, los dispositivos no estan coenctados, firewall bloqueando el tráfico, etc...).
+
+## Mostrando la ruta entre nodos con ICMP
+
+Una de las cosas que muestra el protocolo ICMP es mostrar el path entre los dispositivo, esto lo podemos hacer con la herramienta `traceroute`. Con esta herramienta podemos ver dicho camino que toman las request desde el emisor al receptor.
+
+Con esta herramienta podemos ver dentro de la red donde estan los caminos donde se estan viendo afectados los tiempos de espera entre un nodo y otro. Identificamos los caminos mas lentos dentro de la ruta entre 2 nodos.
+
+Este comando muestra la siguiente información: 
