@@ -29,5 +29,3 @@ Existen tipos de puertos dependiendo de su naturaleza.
 Esto permite que se permitan en un mismo dispositivo multiples conexiones de multiples servicios sin que estos colisionen. Hay que tomar en cuenta que los puertos son de entrada y de salida. Por lo general los puertos de entrada son los puertos fijos que se les asigna a las aplicaciones para que los paquetes que vayan directamente a estos los puedan manejar corectamente; y luego tenemos los puertos de salida que suelen ser puertos que se asignan aleatoriamente para la transmision de paquetes desde un origen.
 
 En los detalles de los paquetes TCP, se pueden observar tanto los puertos de entrada como los de salida.
-
-
