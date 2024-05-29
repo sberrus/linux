@@ -148,3 +148,53 @@ Una de las cosas que muestra el protocolo ICMP es mostrar el path entre los disp
 Con esta herramienta podemos ver dentro de la red donde estan los caminos donde se estan viendo afectados los tiempos de espera entre un nodo y otro. Identificamos los caminos mas lentos dentro de la ruta entre 2 nodos.
 
 Este comando muestra la siguiente información: 
+
+- Hop number: indica la posición del router en el path.
+- Router IP address/hostname: Idnetifica el router intermediario (GW)
+- RTT values: Los tiempos de respuesta de cada uno de los paths.
+
+Estos valores nos ayudan a identificar potenciales problemas.
+
+``` salida del comando traceroute google.com
+traceroute to google.com (), 30 hops max, 60 byte packets
+1  * * *
+2  * * *
+3  * * *
+4  * * *
+5  * * *
+6  * ()  2.170 ms  2.338 ms
+7   ()  3.060 ms  3.051 ms  2.827 ms
+8  105.red-193-152-59.static.ccgg.telefonica.net ()  4.171 ms  4.150 ms  4.256 ms
+9  245.red-217-124-115.static.ccgg.telefonica.net ()  4.209 ms  4.520 ms  4.170 ms
+10  * * *
+11  * * *
+12   5.080 ms  4.924 ms  5.169 ms
+13    5.167 ms  5.014 ms  5.005 ms
+14   24.641 ms 142.251.231.147 (142.251.231.147)  24.001 ms 192.178.11
+15   24.503 ms  24.025 ms  23.957 ms
+16    23.737 ms  23.733 ms  23.729 ms
+```
+
+Viendo la salida anterior, podemos detectar lo siguiente: 
+
+Antes que nada, las líneas que devuelven `* * *` se debe a que el router en cuestión no respondio a la solicitud, esto puede deberse a que no ha podido llegar a ese destino o que tiene deshabilitado el protocolo ICMP.
+
+Luego, el primer dato que se observa es el hostname con su respectiva dirección IP la cual se esta llegnado.
+
+`traceroute to google.com (172.217.17.14), 30 hops max, 60 byte packets` -> en esta línea podemos observar la ip que esta apuntando el dominio en ese momento, también podemos ver la cantidad máxima de hops que tiene la consulta (esto se puede modificar en los parámetros del comando) y el tamaño del paquete que estamos enviando.
+
+### Mecanismo de comunicacion de traceroute
+
+Primero debemos definir que es el TTL de el paquete IP. Este valor determina el tiempo de vida o los saltos que un paquete tiene de vida. Lo que hace es que el valor de TTL define la cantidad de veces que un paquete puede pasar por un router. Cuando un paquete pasa por un router, cada router decrementa esta valor en uno hasta que se agote el TTL, si el paquete se queda sin TTL, el router que reciba el TTL 1 va a descartarlo y el paquete desaparece de la red. Cuando un paquete muere, el router que descarta el paquete devuelve un paquete ICMP "Time Exceeded", indicando que el paquete se quedo sin TTL al pasar por ese router.
+
+Lo que hace traceroute es definir en el paquete IP un tiempo de vida corto. Por ejemplo: Primero envia un paquete con TTL 1, lo que hace que al llegar al router, el paquete muere y por ende devuelve la inforamción del primer nodo que encuentra. Luego, manda un paquete con destino el cual hayamos definido con un TTL 2, y esto lo que hace es que pasa por el router, el router decrementa el TTL y luego va al siguiente nodo; este nodo mata al paquete y devuelve el ICMP "Time Exceeded" y asi sucesivamente.
+
+De esta forma podemos obtener la inforamción de los paquetes y sus respectivas métricas.
+
+### Cosas a tomar en cuenta
+
+Una de las cosas que puedes tener en cuenta a la hora de inspeccionar los saltos usando tracerouter es que si ves altos tiempos de respuesta, puede que debas revisar el hosting o la configuración que tengas creada. También puede deberse a problemas de infraestructura (instalaciones en mal estado, equiupos desactualizados, intentar llegar a un servidor que se encuentra muy lejos geograficamente, etc.)
+
+Los * indican que se han perdido paquetes en el camino o que el router no permite responder a esos paquetes (deshabilitado ICMP), 
+
+Podemos ver también que se repite en multiples ocasiones que se intenta llegar a un mismo host, esto puede deberse a problemas de `Routin Loops` y es posible que tu IS este teniendo problemas a la hora de redireccionar los paquetes. 
