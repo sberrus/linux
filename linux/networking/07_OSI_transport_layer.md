@@ -69,4 +69,8 @@ También podemos hacer escaneo de puertos de tipo `UDP-Scan` usando la flag -sU.
 
 Las direcciones NAT nos permiten solucionar un problema que tenemos relacionado con las direcciones IPV4 que es el que tenemos una cantidad limitadas de IP`s para una cantidad muy grnade de dispositivos que hay disponibles y que cada vez son más.
 
-Una de las soluciones que tenemos para este problema es el NAT.
+Una de las soluciones que tenemos para este problema es el NAT. En general se refiere a la forma que tienen los ISP de ofrecer una sola IP publica la cual los nodos pueden comunicarse a nuestra red local, siendo el gestor de ese contenido nuestro router; y dentro de ese router podemos tener multiples redes internas con distintos dispositivos conectadas a la misma.
+
+Como hemos visto, el router es el que tiene la capacidad de tener tanto una ip local como una ip publica, esto ayuda a que se ahorren direcciones ip para que puedan haber suficientes para todos; a su vez, se encarga de cuando un nodo de la red interna intenta enviar un frame, este se encarga de empaquetarlo, etiquetarlo y enviarlo al nodo el cual se intenta llegar. El router se encarga, en el momento de que se empaqueta el frame, de etiquetar los paquetes de manera de que cuando haya una respuesta por parte del nodo al cual se intenta llegar, haya una forma la cual luego el router pueda comunicarse de vuelta y sepa para que nodo dentro de la red local debe enviarse el paquete.
+
+
