@@ -61,4 +61,3 @@ En Windows, solemos tener formatos como los siguientes:
 
 En MAC tenemos lo siguiente (APFS):
 Es el sistema principal para IOS y macOS. Este sistema soporta encriptación del disco entero, dando una capa de seguridad extra.
-
