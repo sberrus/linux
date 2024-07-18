@@ -58,4 +58,17 @@ También, tenemos wildcards y atajos para poder crear cronjobs más eficientes:
 
 - 0 0 * * 1 -> A las 00:00 los lunes
 
+## Debugging cronjobs
+
+Para hacer tareas de debuggin, podemos revisar los logs del servicio `cron.service` haciendo uso del comando `journalctl -u cron.service -f` para ver en tiempo real los errores.
+
+Por lo general, cron maneja la salida de los jobs de la siguiente manera:
+
+- Redirigiendo la salida y almacenandola en un fichero. *Si no se define una salida de los logs, se utiliza por defecto el MTA*
+- Utilizando el Mail Transfer Agen (MTA) del sistema para enviar la salida por correo.
+
+## CentOS
+
+En centos funciona ligeramente diferente, ya que el servicio se llama crond.service y los logs de journalctl son diferentes.
+
 
