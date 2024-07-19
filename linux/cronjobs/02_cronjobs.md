@@ -1,4 +1,4 @@
-# Cronjobs, como funcionan.
+# Cronjobt, como funcionan.
 
 Los cronjobs tienen un daemon en segundo plano `crond` el cual se encarga de gestionar los jobs y la configuración que necesitemos utilizar.
 
@@ -71,4 +71,12 @@ Por lo general, cron maneja la salida de los jobs de la siguiente manera:
 
 En centos funciona ligeramente diferente, ya que el servicio se llama crond.service y los logs de journalctl son diferentes.
 
+## Ejecuciones globales system-wide
 
+Como hemos indicado anteriormente, los cronjobs se definen en principio para cada usuario, por lo que estos son los dueños y tienen los permisos que el usuario en sí tenga; pero, como hacemos para crear cronjobs para todo el sistema? que tenga permisos globales?
+
+Para lograr esto debemos hacer uso de los system-wide cronjobs, para poder acceder a estos debemos editar el fichero /etc/crontab directamente 
+
+La definición del cronjob en system-wide es similar a la del os cronjobs de los usuarios, con la diferencia de que hay que añadir un campo adicional que es el campo user-name, siendo este el que define que usuario será el propietario de dicho cronjob; quednado de la siguiente manera:
+
+[Minutes] [Hours] [Day] [Month] [Day-of-Week] [user-name] [Command]
