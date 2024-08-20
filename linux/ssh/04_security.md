@@ -31,4 +31,16 @@ De manera predeterminada, todos los usuarios de la máquina pueden conectarse a 
 
 Esto lo hacemos añadiendo la directriz `AllowUsers <usuarios>` al fichero `/etc/ssh/sshd_config`.
 
-Añadido a esta recomendación, podemos definir un usuario con una política de contraseñas estrícta y que a partir de este, podamos acceder a los usuarios que deseemos acceder de manera más sencilla.
+Añadido a esta recomendación, podemos definir un usuario con una política de contraseñas estrícta y que a partir de este, podamos acceder a los usuarios que deseemos acceder de manera más sencilla añadiendo una capa extra de seguridad al sistema.
+
+## Errores al cambiar la configuración de ssh
+
+Una de las cosas que debemos tener en cuenta a la hora de modificar la configuración de ssh es que los cambios que hagamos, de hacerlo mal, podemos bloquearnos o podemos romper la configuración de ssh haciendo que sea inaccesible acceder al servidor mediante esta vía. En el caso de servidores virtuales o en entornos cloud, esto puede ser un problema porque podemos dejar inaccesible o en el caso de servidores físicos, debemos acceder físicamente a estos para poder revertir los cambios que se han hecho. 
+
+Para minimizar este riesgo podemos hacer lo siguiente:
+
+- Luego de realizar los cambios, podemos intentar acceder al servidor desde otra consola. La consola antigusa seguira viva, la configuración de ssh se hace al momento de hacer el intento de acceso para las nuevas consolas que lo soliciten. Por lo que es una buena recomendación el realizar una prueba de conexión antes de matar la consola que se encuentra conectada en ese momento.
+
+- Usar el comando `sudo sshd -t` para testear que el fichero de configuración de ssh se encuentra configurado correctamente. 
+
+
