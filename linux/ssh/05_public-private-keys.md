@@ -21,4 +21,6 @@ Ya configurado esto, podemos acceder directamente desde la máquina que tiene la
 
 ## Desactivar el uso de claves para poder acceder al servidor
 
-Podemos definir en el servidor que solo permita conectarse con clientes que cuenten con llaves privadas válidas modificando el fichero `ssh_config` añadiendo la siguiente directiva: `
+Podemos definir en el servidor que solo permita conectarse con clientes que cuenten con llaves privadas válidas. Esto permite añadir otra capa extra de seguridad la cual hace que el usuario que tiene acceso al sistema mediante el uso de las llaves, no pueda acceder desde otro dispositivo que no tenga las llaves de acceso. Si un atacante tiene la credencial de acceso para acceder, si esta opción esta deshabilitada, así tenga la credencial, no va a poder acceder sin tener las llaves válidas. Por lo que un atacante necesitará necesariamente tanto la llave como la contraseña si desea hacer daño al sistema. Esto junto a otras estrategias de ciberseguridad añaden más capas de seguridad a la misma.
+
+Para configurar esto debemos modificando el fichero `/etc/sh/sshd_config` añadiendo la siguiente directiva: `PasswordAuthentication no`.
