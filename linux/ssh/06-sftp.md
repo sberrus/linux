@@ -17,4 +17,10 @@ En el caso de los sistemas Ubuntu, en el explorador de ficheros, tenemos la opci
 
 En este debemos indicar el protocolo que vamos a utilizar y el usuario para acceder como si fuera ssh. EJ: `sftp://<usuario>@<hostname>`
 
+scp (Secure File Copy OpenSSH)
+---
+En el caso de querer usar la consola, debemos hacer uso del comando scp el cual nos permite, mediante el protocolo ssh hacer transferencia de ficheros a traves de este protocolo. Para hacerlo debemos hacer lo siguiente:
+
+`scp <usuario>@<hostname>:<ruta_en_máquina_de_fichero_a_copiar> <ruta_en_local_de_fichero_a_copiar>`
+
 
