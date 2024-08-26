@@ -69,5 +69,3 @@ ECDSA key fingerprint is SHA256:<FINGERPRINT>.
 En este caso, el comando sería el siguiente: `ssh-keygen -E SHA256 -lf /etc/ssh/ssh_host_ecdsa_key`
 
 Como podemos ver, en el cliente de ssh, esta solicitando el fingerprint correspondiente a la key ecdsa usando el algoritmo sha256.
-
-
