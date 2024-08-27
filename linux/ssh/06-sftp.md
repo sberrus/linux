@@ -21,6 +21,10 @@ scp (Secure File Copy OpenSSH)
 ---
 En el caso de querer usar la consola, debemos hacer uso del comando scp el cual nos permite, mediante el protocolo ssh hacer transferencia de ficheros a traves de este protocolo. Para hacerlo debemos hacer lo siguiente:
 
-`scp <usuario>@<hostname>:<ruta_en_máquina_de_fichero_a_copiar> <ruta_en_local_de_fichero_a_copiar>`
+`scp <parametros> <ruta_local_fichero_a_copiar> <usuario>@<hostname>:<ruta_remota_fichero_a_pegar>`.
 
+Cabe destacar que desde el dispositivo local, puedes indicar a los sistemas a traves de ssh que desde un ordenador A, donde estas trabajando tú, puedes indicar que 2 servidores en remoto se compartan ficheros mediante este protocolo. 
 
+Cyberduck
+---
+Esta es una herramienta para poder transferir ficheros a traves de este protocolo de manera sencilla y permite configurar todo a traves de una interfaz bastante amigable para que la configuración de la misma vaya fluida.
