@@ -58,3 +58,22 @@ Existen diferentes tipos de dependencias los cuaels un sistema puede requerir co
 Por defecto, dnf va a instalar los paquetes recomendados si estos no generan conflicto de dependencias entre los paquetes ya instalados.
 
 En la configuración de dnf en `/etc/dnf/dnf.conf` podemos definir el parámetro `install_weak_deps=False` para que solo configure las dependencias requeridas por el paquete. Otra forma que tenemos es a la hora de instalar el paquete, usando el siguiente parámetro: `dnf install <paquete> --setopt=install_weak_deps=Fals`. El cual tiene le mismo comportamiento pero solo para la instalación en cuestión.
+
+Recomendaciones
+---
+
+Los siguientes tips son recomendaciones para evitar que el sistema se corrompa como:
+
+- evitar hacer downgrades de dependencias como `dbus, glibc, selinux-policy`.
+
+- No hacer downgrade del sistema operativo a una versión más antigua. Por seguridad, intentar en lo posible estar con las últimas actualizaciones disponibles.
+
+- Existe la posibildiad de hacer upgrades de paqueterias excluyendo algunas que no sean necesarias de actualziar. Esto lo hacemos mediante el uso del siguiente parámetro pasandoselo al comando dnf, `dnf upgrade --exclude=<dependencia,dependencia,dependencia>`. En la el fichero `/etc/dnf/dnf.conf` podemos definir en este fichero las dependencias que no deseamos que se actualizen.
+
+- En el caso de los servidores críticos de producción, se recomienda no tener actualizaciones automaticas, esto puede ocasionar problemas de compatibilidades entre distintas versiones de nuestros sistemas. aNTE TODO ADAPTA EL SERVICIO A LAS NECESIDADES DE LA OPERATIVA. Si deseamos tner las actualizaciones automaticas, podemos instalar el paquete `dnf-automatic`, el cual mediante la configuración del demonio, podemos definir la periodicidad y que paquetes podemos descargar automaticamente. Se recomienda tener la configuración predeterminada que permite tener las últimas actualizaciones de seguridad del sistema.
+
+## Modules
+
+Los modulos nos permiten entre otras cosas asegurar la integridad y la optimización de las versiones pudiendo configurar ciertos modules para que esten actualizados automaticamente asegurando la optiizacion y la integridad del sistema.
+
+
