@@ -16,4 +16,11 @@ De más bajo nivel a más alto podemos indicar que firewalld tiene la siguiente 
 
 Por defecto firewalld bloquea todas las conexiones TCP y UDP, exceptuando las que de por si estan permitidas por el sistema de manera predeterminada como los puertos 22, 546, el puerto ipv6. Por otra parte, los puertos ICMP estan bloqueados por defecto para evitar ataques que vayan dirigidos directamente a estos puertos.
 
+## Interactuar con las CLI
+
+Con firewalld tenemos distintos namespacees para ciertos servicios los cuales nos permiten definir reglas para los puertos dependiendo de el namespace que tenga. De manera predeterminada, por ejemplo, el puerto ssh es el 22, por lo que si queremos abrir dicho puerto, no necesitamos saberlo, con definir directamente por el namespace es suficiente.
+
+Para ver todos los namespaces disponibles usamos el comando `firewall-cmd --get-services`.
+Si queremos ver la información de ese namespace, podemos hacer uso del comando `firewall-cmd --info-sevice <namespace_del_servicio>`; de esta forma podemos ver la información del puerto que usa ese namespace y distintos parámetros que tiene este.
+
 
