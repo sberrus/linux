@@ -1,16 +1,12 @@
-export PATH="/root/.cargo/bin:/home/samdev/dev:$PATH"
-. "$HOME/.cargo/env"
-
 # Declare a custom PS1 variable
-PS1="\[$(tput bold setaf 2)\]→ \[$(tput setaf 6)\]\w \[$(tput setaf 3)\](\t)\[$(tput sgr0)\]$ "
+PS1="\[$(tput setaf 3)\](\t) \[$(tput bold setaf 2)\]\u@\h\[$(tput setaf 6)\]\w\[$(tput sgr0)\]$ "
 
-# Custom aliases 
+# Custom aliases
 alias ll='ls -lh --color'
-alias la='ls -a --color'
+alias la='ls -la --color'
 alias lla='ls -lhta --color'
 alias llt='ls -lht --color'
 alias ls='ls --color'
-alias cl='clear'
 alias grep='grep --color'
 
 # Custom git & github aliases

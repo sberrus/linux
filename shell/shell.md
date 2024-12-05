@@ -96,4 +96,19 @@ En el PS1 podemos definir una serie de variables especiales que PS1 se va a enca
 - \d: Fecha actual en el formato "día de la semana mes día".
 - \n: Nueva línea.
 - \r: Retorno de carro (mueve el cursor al principio de la línea).
+- \[ \]: Caracteres especiales que se detallan a continuación.
 
+#### Caracteres \[ \]
+
+Los caracteres especiales \[ \] son necesarios para que el algoritmo que hace que la variable PS1 se pueda ver correctamente en la consola y dentro tenga caracteres con lenght 0 no se tengan en cuenta.
+
+Ejemplo: 
+``` bash
+PS1="\[$(tput setaf 3)\](\t) \[$(tput bold setaf 2)\]\u@\h\[$(tput setaf 6)\]\w\[$(tput sgr0)\]$ "
+```
+
+En esta variable, los fragmentos que estan dentro de `\[<fragmento_no_imprimible>\]` se definen de esta forma para que PS1 no tome en cuenta estos caracteres para definir donde empieza el PS1 y donde acaba.
+
+Si no se define, nos podemos encontrar con comportamientos extraños al momento de usar la consola a raiz de la variable PS1.
+
+Como podemos ver en `\[$(tput setaf 3)\]` ese fragmento de la variable, no se imprime en la variable per se, pero si no lo arropamos dentro de `\[ \]` podemos encontrarnos con errores y bugs inesperados a la hora inicializar la consola.

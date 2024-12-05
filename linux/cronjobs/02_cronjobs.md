@@ -21,7 +21,7 @@ Esto va a abrir el crontab del usuario que ha ejecutado el comando. Cada usuario
 
 ## Ver el cronjob del usuario
 
-Para ver los cronjobs de los usuarios lo hacemos mediante el uso de `cronjob -l`.
+Para ver los cronjobs del usuario que lo ejecuta lo hacemos mediante el uso de `crontab -l`.
 
 ## formato de los cronjobs
 
