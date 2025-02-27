@@ -23,8 +23,8 @@ Para poder montar un volumen lógico e instalar un fs dentro, debemos hacer lo s
 El fichero en cuestión contará con un formato similar al siguiente:
 
 ``` text
-/dev/vgsystem/lv_db2_metrics_output_log /opt/db2_mainview_metrics_prod/output_log       ext4        defaults        1 2
-|------------  1 ---------------------| |---------------- 2 --------------------|       |-3|        |-  4 -|        5 6
+/dev/vgsystem/path_logical_volume filesystem_path_to_mount       ext4        defaults        1 2
+|------------  1 ---------------| |---------- 2 ---------|       |-3|        |-  4 -|        5 6
 ```
 
 En el ejemplo anterior, podemos observar lo siguiente; separados por espacios en blanco tenemos los siguientes campos: 
