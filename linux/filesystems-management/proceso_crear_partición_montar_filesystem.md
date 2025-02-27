@@ -13,10 +13,10 @@ Para poder montar un volumen lógico e instalar un fs dentro, debemos hacer lo s
     - `lvdisplay` -> Muestra todos los volumenes montadoso
 
 2. Crear nuevo Volumen Lógico y asignar el file system para poder acceder.
-`lvcreate -L 1G -n <nombre_nuevo_volumne_logico> <nombre_del_vg>` -> Define un nuevo volumen lógico en el VG Group.
-`mkfs.ext4 <nombre_volumne_logico>` -> Formateamos el volumen con el tipo de formato definido, tenemos otros comandos para poder formatear mkfs.ext{2,3,4} etc...
-`mount <volumen_logico> <ruta_absoluta_filesystem>` -> Monta en el volumen el filesystem para poder utilizarlo y ser accesible. Se debe indicar la ruta identificativa del volumen lógico y luego se indica el directorio en el cual se indica donde se alojara en el filesystem dicho directorio para poder acceder.
-`df -h <directorio>` -> listamos el filesystem del directorio en cuestión para poder visualizar en que volumen lógico se encuentra montado dicho el fs.
+- `lvcreate -L 1G -n <nombre_nuevo_volumne_logico> <nombre_del_vg>` -> Define un nuevo volumen lógico en el VG Group.
+- `mkfs.ext4 <path_volumne_logico>` -> Formateamos el volumen con el tipo de formato definido, tenemos otros comandos para poder formatear mkfs.ext{2,3,4} etc...
+- `mount <volumen_logico> <ruta_absoluta_filesystem>` -> Monta en el volumen el filesystem para poder utilizarlo y ser accesible. Se debe indicar la ruta identificativa del volumen lógico y luego se indica el directorio en el cual se indica donde se alojara en el filesystem dicho directorio para poder acceder.
+- `df -h <directorio>` -> listamos el filesystem del directorio en cuestión para poder visualizar en que volumen lógico se encuentra montado dicho el fs.
 
 3. Configurar montaje a nivel de arranque de sistema. 
 `vim /etc/fstab` -> Se edita el fichero `/etc/fstab` donde se encuentra las directricez para el montaje de los filesystem cuando arranca el sistema.
