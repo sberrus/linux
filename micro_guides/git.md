@@ -12,3 +12,10 @@ git tag -a <Version_control> -m "<comentario>"
 # Pushear tags a remoto
 git push origin --tags
 ```
+
+## Eliminar un fichero de un commit (pre push - local)
+
+```bash
+# Comando para eliminar fichero de commit
+git filter-branch --tree-filter 'rm -rf path/to/your/file' HEAD
+```
