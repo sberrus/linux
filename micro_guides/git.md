@@ -11,11 +11,10 @@ git tag -a <Version_control> -m "<comentario>"
 
 # Pushear tags a remoto
 git push origin --tags
-```
 
-## Eliminar un fichero de un commit (pre push - local)
-
-```bash
-# Comando para eliminar fichero de commit
+## Eliminar un fichero que ya se encuentra en "local repository"
 git filter-branch --tree-filter 'rm -rf path/to/your/file' HEAD
+
+## Como crear nueva rama a partir de un commit
+git branch <nombre_rama> <hash_commit>
 ```
