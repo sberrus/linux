@@ -67,3 +67,23 @@ En el ejemplo anterior, podemos observar lo siguiente; separados por espacios en
 - `mount -av` -> Este compruaba el fichero `/etc/fstab` y monta los fs que no esten montados; o informa de los fs que ya se encuentren montados en el sistema.
 
 - `systemctl daemon-reload` -> reinicia la configuración de systemctl y sus demonios propios
+
+## Procesp para desmontar Filesystem y liberar espacio de VG
+
+Cuando se deje de usar un fs, podriamos necesitar liberar ese espacio para poder utilizarlos para otros servicios. Para hacer esto, necesitaremos hacer lo siguiente:
+
+1. Desmontar el filesystem
+``` bash
+# Descubrimos los FS que se encuentran montados
+df -h .
+
+# Desmontamos el fs (El campo "Mounted on" cuando ejecutas `df -h`)
+umount /ruta/absulota/filesystem
+
+# Desactivamos el LV. Esto con el fin de garantizar que no hay nada realizando operaciones IO en este FS.
+lvchange -an /ruta/volumen/logico
+lsof /ruta/punto/montaje # Ver que procesos estan haciendo operaciones IO en este fs.
+
+# Eliminamos el LV
+lvremove /ruta/volumen/logico
+```
