@@ -87,3 +87,5 @@ lsof /ruta/punto/montaje # Ver que procesos estan haciendo operaciones IO en est
 # Eliminamos el LV
 lvremove /ruta/volumen/logico
 ```
+
+Habiendo realizado esto, podemos comprobar con el comando `lvdisplay` si el LV ya no esta, habiendose liberado el espacio que tenía asignado.
