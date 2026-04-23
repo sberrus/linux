@@ -1,63 +1,163 @@
-# Estructura de un dispositivo de almacenamiento DA's
+## Alineación y sectores de disco (Advanced Format)
 
-En esta sección nos vamos a enfocar en el manejo de dispostiivos de tipo HDD, SDD, USB omitiendo otra clase de dispositivos que se usaban en la antigüedad.
+Los discos modernos (especialmente HDD y SSD) ya no trabajan únicamente con sectores de 512 bytes:
 
-Los dispositivos de almacenamiento son dispositivos que nos permiten almacenar bits de manera persistente para poder recuperarlos en un futuro, modificarlos o eliminarlos siempre que sea necesario. Para ello, internamente tiene ciertos aspectos como los siguientes:
+*   **Sectores lógicos**: lo que el SO ve (512B o 4096B).
+*   **Sectores físicos**: tamaño real interno del disco (normalmente 4096B).
 
-## Partition table
+Esto se conoce como **Advanced Format (4Kn / 512e)**.  
+Una mala alineación de particiones provoca:
 
-Las particiones son una forma de poder separar espacio dentro de un DA para poder tener aislados ciertos bits de otros para que tengan un dominio diferente; por lo que las tablas de partición permiten definir que espacios van a ser definidos y sus capacidades, formatos etc. De los formatos de partición tenemos 2 tipos:
+*   Más operaciones I/O
+*   Peor rendimiento
+*   Mayor desgaste en SSD
 
-- MBR (Master Boot Record): Es el tipo de partición más antiguo que se conoce, esta limitado a un máximo de 4 particiones primarias y a un máximo de 2TiB de información por disco.
-- GPT (GUID Partition Table): Estos son el formato actual y moderno de particiones de disco, permiten tener hasta 128 particiones simultaneas y discos de muchisima más capacidad.
+Por eso hoy en día las herramientas modernas (`parted`, `gparted`, `fdisk` nuevos) alinean automáticamente las particiones a múltiplos de 1 MiB.
 
-Para ver la inforamación de los discos que tenemos en nuestros dispositivo conectados podemos hacer uso del comando `gparted`. Con este comando podemos tener una GUI la cual nos muestra información de los dispositivos que tenemos disponibles y su inforamación.
+***
 
-## Diferencias entre la nomenclatura de espacios de almacenamiento, medidas de los espacios de almacenamiento
+## Tipos de dispositivos de almacenamiento
 
-Para esta parte, vamos a crear una partición de 50.000 MiB de almacenamiento que va a ser aproximadamente 48GB, pero ¿porque pasa esto?
+### HDD (Hard Disk Drive)
 
-Para  ver lo siguiente tenemos que saber lo siguiente:
+*   Basados en discos magnéticos rotatorios.
+*   Mayor latencia por partes mecánicas.
+*   Mejor coste por GB.
+*   Más propensos a fallos físicos.
 
-8 Bit = 1 Byte. Esto es porque al ser sistemas binarios, la unidad de cada byte es 8 bits almacenados.
-1 Kibibyte = 1024 Byte (2^10 Byte).
-1 Kilobyte = 1000 Byte (10^3 Byte).
+### SSD (Solid State Drive)
 
-La diferencia entre los kilo\* y los kibi\* es que uno es para realizar medidas en sistemas decimales (Kilo\*) y los otros son para sistemas binarios (Kibi\*).
+*   Memoria flash NAND.
+*   Muchísima menor latencia.
+*   Sin partes móviles.
+*   Vida útil limitada por ciclos de escritura (TBW).
 
-Ya para los 90's, se definio un estandar por el sistema que conocemos actualmente el cual 1Kilobyte representa 1024 bytes, 1 megabyte representa 1024 kilobytes y asi...
+Es importante que los filesystems y el SO estén optimizados para SSD (TRIM, discard, etc.).
 
-## ¿Qué son los filesystems?
+***
 
-Los filesystems son la forma que tiene el sistema de ordenar los directorios y los ficheros. Estos son los responsables de lo siguiente:
+## TRIM y Garbage Collection (SSD)
 
-- Organización: Se encargan de la organización de los directorios y ficheros.
-- Locación de espacios en el disco: Se encargan de asignar el espacio disponible dentro de un DA y de gestionar cuando este ocupa espacio y cuando liberarlo cuando se elimina un fichero por ejemplo.
-- Es el encargado de manejar la metadata de los ficheros que se almacenan: Maneja los permisos, los permisos de almacenamiento, los datos de `timestamp` etc...
-- Integridad de los datos: El filesystem también maneja la integridad de los datos a traves de mecanismos de detección de errores y de asegurad (dependiendo del tipo de filesystem que se cuente) de que los datos se mantengan persistentes aún así haya un corte de electricidad repentino, algunos fiulesystems estan preparados para estos casos e intentan en la medida de lo posible de mantener la información a salvo incluso si hay un apagado inesperado o un corte directo de energia en el sistema.
+En SSD, borrar un fichero **no libera físicamente los bloques** de forma inmediata.
 
-### Tipos de filesystems
+*   **TRIM**: el SO le indica al SSD qué bloques ya no contienen datos válidos.
+*   **Garbage Collection**: el controlador del SSD reorganiza internamente los bloques para optimizar escrituras futuras.
 
-En linux tenemos los siguientes:
-- ext3 Third extended FS developed: Es antigüo, pero es altamente usado actualmente.
-- ext4 Forth version extended FS developed: 
-	- Mejora le optimización del sistema
-	- Soporte para discos de alto tamaño.
-	- Algoritmos de recuperación de datos luego de apagado del sistema.
-- xfs: 
-	- Especialmente útil para manejar ficheros de gran tamaño.
-	- Optimizado para operaciones I/O en paralelo.
-	- Soporte para snapshots, los ficheros puede compartir los mismos bloques de datos simultaneamente.
-- btrfs:
-	- Soporte para manejar ficheros usando snapshots de manera sencilla. A nivel de sistema, cada vez que se modifica un fichero, se crea una copia del mismo, esto permite que se puedan crear snapshots de los ficheros que se esten manejando y poder manejar más fácilmente la concurrencia.
-	- Suele ser utilizado en los RAID's por estas ventajas.
+Filesystems como `ext4`, `xfs`, `btrfs` y `zfs` tienen soporte para TRIM.
 
-En Windows, solemos tener formatos como los siguientes:
-- FAT32: 
-	- Esta limitado para ficheros de máximo 4GB de datos.
-- NTFS: Propietario, es usado para que sea leído por sistemas Linux y poder compartir datos fácilmente entre sistemas.
-- ReFS: Sucesor de NTFS.
-- exFAT: Propietario hasta 2019. Ahora publicado y usado principalmente para dispositivos externos como memorias de camaras o dispositvos USB.
+***
 
-En MAC tenemos lo siguiente (APFS):
-Es el sistema principal para IOS y macOS. Este sistema soporta encriptación del disco entero, dando una capa de seguridad extra.
+## Journaling vs Copy-on-Write
+
+### Filesystems con Journaling
+
+Ejemplos: `ext3`, `ext4`, `xfs`
+
+*   Guardan un registro (journal) de operaciones antes de ejecutarlas.
+*   Permiten recuperación rápida tras apagados inesperados.
+*   No protegen completamente contra corrupción silenciosa de datos.
+
+### Filesystems Copy-on-Write (CoW)
+
+Ejemplos: `btrfs`, `zfs`
+
+*   Nunca sobrescriben datos directamente.
+*   Al modificar un bloque, se escribe uno nuevo y luego se actualizan punteros.
+*   Permiten snapshots consistentes y recuperación avanzada.
+
+***
+
+## ZFS (Zettabyte File System)
+
+ZFS merece una sección propia por su diseño:
+
+### Características clave
+
+*   **Filesystem + gestor de volúmenes** (no necesita LVM, RAID por separado).
+*   **Copy-on-Write**.
+*   **Checksums en todos los datos y metadata**.
+*   **Autocorrección de datos** (si hay redundancia).
+*   **Snapshots y clones nativos**.
+*   **Compresión y deduplicación** integradas.
+*   **Soporte avanzado de RAID (RAID-Z)**.
+
+### Integridad de datos
+
+ZFS detecta corrupción silenciosa (bit rot):
+
+*   Cada bloque tiene un checksum.
+*   Al leer datos, verifica integridad.
+*   Si hay redundancia, repara automáticamente.
+
+### Pools y datasets
+
+*   **zpool**: conjunto de discos físicos.
+*   **datasets**: filesystems lógicos dentro del pool con propiedades independientes (compresión, cuotas, snapshots).
+
+### Casos de uso ideales
+
+*   Servidores
+*   Sistemas de backup
+*   Almacenamiento crítico
+*   NAS (TrueNAS, Proxmox)
+
+⚠️ Requiere más memoria RAM (tradicionalmente se recomienda >8 GB).
+
+***
+
+## RAID: concepto general
+
+RAID (Redundant Array of Independent Disks) permite:
+
+*   **Rendimiento**
+*   **Redundancia**
+*   **Disponibilidad**
+
+### Tipos comunes
+
+*   **RAID 0**: rendimiento, sin redundancia.
+*   **RAID 1**: espejo.
+*   **RAID 5**: paridad distribuida (mínimo 3 discos).
+*   **RAID 6**: doble paridad.
+*   **RAID 10**: espejo + striping.
+
+Filesystems como `btrfs` y `zfs` implementan RAID a nivel de filesystem.
+
+***
+
+## Metadata y atributos extendidos
+
+Los filesystems modernos manejan:
+
+*   **Permisos POSIX**
+*   **ACLs (Access Control Lists)**
+*   **Extended Attributes (xattr)**
+
+Esto permite:
+
+*   Seguridad avanzada
+*   Integración con SELinux, AppArmor
+*   Metadata adicional sin afectar el contenido del fichero
+
+***
+
+## Montaje y puntos de montaje
+
+Un filesystem debe montarse para ser accesible:
+
+*   Se monta en un **mount point** (directorio vacío).
+*   El archivo `/etc/fstab` define montajes persistentes.
+*   Opciones de montaje afectan rendimiento y seguridad (`noexec`, `nodev`, `nosuid`, `discard`, etc.).
+
+***
+
+## Resumen de cuándo usar cada filesystem
+
+*   **ext4**: uso general, estable, simple.
+*   **xfs**: grandes volúmenes y alto I/O.
+*   **btrfs**: snapshots sencillos, entornos dinámicos.
+*   **zfs**: máxima integridad y control.
+*   **exFAT**: compatibilidad entre sistemas.
+*   **NTFS**: interoperabilidad con Windows.
+
+***
