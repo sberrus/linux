@@ -172,17 +172,6 @@ Ejemplos de medios:
 
 ---
 
-Resumen
-
-Capa| Nombre| Función principal| Ejemplos
-7| Application| Servicios de red para las aplicaciones| HTTP, FTP, SMTP, DNS
-6| Presentation| Representación, transformación, compresión y cifrado de datos| Codificación, compresión, cifrado
-5| Session| Gestión de sesiones de comunicación| Establecimiento y sincronización de sesiones
-4| Transport| Comunicación extremo a extremo entre procesos| TCP, UDP
-3| Network| Direccionamiento y enrutamiento entre redes| IP, routers
-2| Data Link| Comunicación entre nodos de un mismo enlace| Ethernet, Wi-Fi, MAC, switches
-1| Physical| Transmisión de bits mediante señales físicas| Cobre, fibra, radio
-
 Una forma sencilla de recordar la función de cada capa es:
 
 Application → qué quiere hacer la aplicación
