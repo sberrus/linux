@@ -1,200 +1,1094 @@
-# Network Layout
+OSI Network Layer
 
-Viendo lo anterior, sabiendo que para que en el layer 2, necesitemos estar directamente conectados ya semediante conexión directa o mediante algún switch, ¿como hacemos para cuando tenemos conexiones que no estan directamente conectadas?
+La Network Layer (capa de red) es la capa 3 del modelo OSI.
 
-En este layer, ya no hablamos de frames sino de paquetes, la principal diferencia entre un paquete y un Frame es que un paquete tiene información relacionada con la dirección a la cual va a ir dirigido.
+En la capa anterior, Data Link, trabajábamos principalmente con la comunicación entre dispositivos dentro de un mismo enlace o red local mediante frames y direcciones MAC.
 
-En el caso de los frames, este tiene un MAC emisor y un MAC receptor a la hora de identificar para quien y desde donde se esta enviando un Frame. En el caso de los paquetes, estos se identifican mediante direcciones IP. Además, estos pueden ser redirigidos desde un dispositivo a otro. 
+Pero ¿qué ocurre cuando el dispositivo al que queremos enviar información no está conectado directamente a nuestra red local?
 
-Los paquetes luego de manera local se transforman el Frames que son utilizados para transmitir los datos.
+En este punto entra en juego la capa de red.
 
-El flujo, de manera sencilla podría decirse que un dispositivo envía un frame que lo recoge el `router` y este lo empaqueta para ser transmitido por la red; luego este es recolectado por otro `router` que vuelve a convertirlo en un Frame.
+Su función principal es permitir que los datos puedan viajar entre diferentes redes, utilizando mecanismos de direccionamiento lógico y enrutamiento.
 
-Para revisar los paquetes que se han enviado, podemos hacer uso del comando `ip route show` el cual muestra la siguiente inforamción.
+El protocolo más importante de esta capa es IP (Internet Protocol).
 
-``` salida comando ip route show
-none default via 192.168.4.1 dev eth0 proto unspec metric 0
-none 192.168.4.0/22 dev eth0 proto unspec metric 256
-none 192.168.7.235 dev eth0 proto unspec metric 256
-none 192.168.7.255 dev eth0 proto unspec metric 256
-none 224.0.0.0/4 dev eth0 proto unspec metric 256
-none 255.255.255.255 dev eth0 proto unspec metric 256
-```
+---
 
-Hay que tomar en cuenta lo siguiente:
+Frames vs Packets
 
-la primera linea `default` es la ruta que toman todos los paquetes salientes de mi dispositivo el cual van para internet. Por lo general, esta es la ruta del router en el caso de que estes conectado a una red inalámbrica.
+Una distinción fundamental entre las capas 2 y 3 es la unidad de datos que manejan.
 
-Por lo general, dependiendo de como este montado el sistema, la ip a donde apuntan las conexiones fuera de nuestra red, se llama Gateway, por lo que el router en el caso anterior, sería el Gateway de la red.
+Layer 2 → Frame
+Layer 3 → Packet
 
-## Subnets
+Un frame contiene información necesaria para transportar datos a través de un enlace concreto.
 
-Las subnets son redes dentro de otras redes. Esto nos permite dentro de una red en la cual estan conectadas múltiples máquinas, separarlas en grupos, de manera que si vemos que hay congestión en la red, podemos hacer subnets para que los paquetes vayan mejor dirigidos y eviten colapsarla.
+Por ejemplo, un frame Ethernet contiene:
 
-Para que esto quede claro tenemos que entender que para que una máquina se comunique con otra dentro de la misma red, se comunican mediante `frames`, en el caso de que se vayan a comunicar vía internet, se comunican vía paquetes.
+Source MAC
+Destination MAC
+Payload
 
-Para simplificar, una subnet es una red dentro de otra red, por lo que una red wifi domestica es una subnet de internet y así... 
+Mientras que un paquete IP contiene, entre otras cosas:
 
-## Subnet Mask
+Source IP
+Destination IP
+Payload
 
-La subnetmask es una forma que tienen las redes de aislar los dispositios de una red de otras redes. Suele tener una nomenclatura similar a la siguiente 255.255.255.0. Esto permite aplicar una regla de `logical AND` a la ip de fuente y destino el cual si la regla aplica, permite enviar un paquete de una interfaz dentro de la misma subnet.
+La diferencia fundamental es que las direcciones IP permiten identificar el origen y destino a nivel de red, haciendo posible que el paquete atraviese diferentes redes.
 
-Las máscaras de red se componen de una IP de 32 bits seguidos por tantos 1 como amplia sea la máscara en bits. EJ: la mascara `255.255.255.0` es igual a `11111111.11111111.11111111.00000000`. Hay que tener encuenta que las máscaras, se componen de `1` consecutivos hasta donde indique el CIDR, desde ese punto se empiezan a definir `0` hasta que se completen los 32 bits. Por lo que /24 indica que la posición donde empiezan a haber `0` es a partir de la posición 24, por lo que la subnetmask de /24 seria 255.255.255.0.
+Las direcciones MAC, en cambio, tienen significado dentro del enlace de datos correspondiente.
 
-Las direcciones 192.168.1.0 suele indicar la ip del gateway de la red; y la dirección 192.168.1.255 indica la IP-BROADCAST la cual es utilizada para enviar mensajes a todos los dispositivos conectados a la red.
+---
 
-Una de las utilidades de las subnetmask es que ayuda a especificar el tamaño de una red. Ya sabiendo que la subnetmask es 255.255.255.0 sabes que hay disponibles 254 hosts; o si vemos una subnet 255.255.254. ya podemos intuir que esa red tiene mas de 500 hosts en la red.
+¿Cómo viaja un paquete entre diferentes redes?
 
-## ¿Cómo podemos ver que dispositivos estan conectados a nuestra red?
+Supongamos que tenemos esta topología:
 
-Con wireshark, podemos detectar un broadcast en el protocolo ARP que al momento de conectarse a la red, pregunta por la ip que este disponible para poder conectarse a ella. hay que buscar por el protocolo ARP el texto "Who is <ip_addr>".
+PC A
+ │
+ │ Ethernet
+ ↓
+Router A
+ │
+ │
+ │ Internet
+ ↓
+Router B
+ │
+ │ Ethernet
+ ↓
+PC B
 
-## Cambiar la dirección ip por una personalizada
+PC A quiere comunicarse con PC B.
 
-Podemos modificar la dirección IP de nuestras interfaces utilizando el comando `ip addr add <ip_address>/<prefix_length> dev <interface>`. Con el comando anterior, podemos asignar una ip personalizada.
+El paquete IP contiene:
 
-a su vez, podemos eliminar una dirección ip en el caso de que ya no la necesitemos con el comando `ip addr del <ip_address>/<prefix_length> dev <interface>`.
+Source IP      → IP de PC A
+Destination IP → IP de PC B
 
-Cuando se añade una ip a una interfaz de forma manual, tenemos 2 direcciones por las cuales los dispositivos pueden comunicarse con nosotros. Al ejecutar el comando `ip addr show`, veremos que en la interfaz a la cual hemos añadido otra dirección ip, veremos que esta tiene 2 líneas que empiezan con `inet ... scope global dynamic/secundary`, en estas veremos la dirección ip que hemos añadido y por la cual también será posible comunicarnos con la interfaz a la cual se la hayamos añadido.  
+Sin embargo, para poder transmitir físicamente ese paquete, necesitamos encapsularlo en un frame.
 
-### ¿Qué utilidades se le puede dar a esta caracteristica?
+En el primer enlace podemos tener:
 
-Poder crear y asignar ips de esta forma tiene ventajas a la hora de crear entornos virtualizados como el caso de docker, que necesita ip's diferentes para poder isolar las peticiones entre contenedores, si se gestionan multiples sitios o servicios dentro de una misma máquina, lo cual ayuda a aislar la configuración en cada una de ellas. En el caso de los nodos de un cluster, podemos utilizar esta caracteristica para poder manejar la comunicación y el balanceo de carga de los peticiones. Pero principalmente, ante todo, es por seguridad, de esta forma podemos aislar peticiones y podemos controlar de manera más segura las conexiones creando reglas para cada una de las ip's. 
+Frame 1
+┌───────────────────────────────────────┐
+│ MAC A → MAC Router A                  │
+│                                       │
+│ IP A → IP B                           │
+└───────────────────────────────────────┘
 
-Otra de las posibles utilidades es la de poder tener varias ip's para realizar pruebas ej. Balanceadores para comprobar que realmente se este equilibrando la carga.
+Cuando el router recibe el frame:
 
-## Inspeccionar las rutas
+1. Comprueba que el frame está destinado a él.
+2. Extrae el paquete IP.
+3. Consulta su tabla de routing.
+4. Determina cuál es el siguiente salto.
+5. Vuelve a encapsular el mismo paquete IP en un nuevo frame.
+6. Envía el nuevo frame por la interfaz correspondiente.
 
-Primero veremos que hace el comando `ip route show` y que significa:
+Por ejemplo:
 
-``` salida de comando ip route show
+PC A
+ │
+ │ Frame 1
+ │ MAC A → MAC Router A
+ ↓
+Router A
+ │
+ │ Frame 2
+ │ MAC Router A → MAC Router B
+ ↓
+Router B
+ │
+ │ Frame 3
+ │ MAC Router B → MAC B
+ ↓
+PC B
 
-default via 000.000.000.000 dev eth0 proto kernel
-000.000.000.000/20 dev eth0 proto kernel scope link src 172.24.32.104
+La idea fundamental es:
 
-```
+«El paquete IP atraviesa la red extremo a extremo, mientras que los frames se utilizan para transportar ese paquete a través de cada enlace individual.»
 
-La ip importante es la segunda la que tiene el tag de la interfaz y la que esta asociada a una subnet ya que esta es la que usa la red para identificar los paquetes a donde tienen que llegar.
+Por eso las direcciones MAC pueden cambiar en cada salto, mientras que normalmente las direcciones IP de origen y destino permanecen iguales durante el recorrido.
 
-con el comando `ip route get <ip>`, podemos ver la ruta que el sistema utiliza para llegar a una ruta en especifico, por ejemplo. Si vemos que una ruta empieza por `<ip> via <ip>...` muestra que es una ruta que necesita buscar esa ip a traves de un GW. Si no vemos ninguna via diferente, es que podemos acceder a ella directamente debido a que esta en la misma red.
+---
 
-En el caso de que por algún motivo querramos modificar el comportamiento de una ruta podemos añadir rutas diferentes al igual que podemso añadir ip's diferentes. Esto lo hacemos mediante los siguietnes comandos:
+Routers y Gateways
 
-- Añadir ruta: ip route add <ip_dest> via <gateway> dev <interfaz>
-- Eliminar ruta: ip route del <ip_dest> via <gateway> dev <interfaz>
+Un router es un dispositivo que conecta diferentes redes y decide por qué interfaz debe reenviar los paquetes IP.
 
-Toda esta configuración es necesaria y útil para cuando tenemos redes bastante complejas los cuales necesitamos tener un control más preciso de a que rutas estamos accediendo dentro de nuestra red y a cuales deseamos que se acceda desde fuera.
+Para tomar estas decisiones utiliza una tabla de routing.
 
-De esta forma, puede haber un caso en el que por ejemplo, tenemos una subnet dentro de nuestra red que por las reglas de subnet mask, los paquetes que querramos enviar desde el dispositivo a la subnet dnetro de nuestra red, por las reglas de subnet mask, el sistema intente enviar estos paquetes mediante el gateway de acceso a internet. En el caso de que querramos enviar ese paquete a un dispositivo dentro de nuestra red, pero que no cumpla con las reglas de subnet mask, debemos hacer una nueva regla de route para que en lugar de utilizar la gw de internet, definamos la ip gw del router que contenga el dispositivo al cual queremos conectarnos.
+Por ejemplo:
 
-## DHCP
+Network          Next Hop
+192.168.1.0/24   directamente conectada
+10.0.0.0/8      10.0.0.1
+default          192.168.1.1
 
-Dynamic host configuration protocol o DHCP, es un mecanismo que tienen los dispostivos de red que, de manera automática, asignar la ip de los dispositivos que se conectan a la red. 
+El gateway es el dispositivo al que se entrega el tráfico cuando necesitamos alcanzar una red que no está directamente conectada.
 
-Consta de los siguientes componentes:
+En una red doméstica, normalmente el router que proporciona acceso a Internet también actúa como default gateway.
 
-- DHCP Server: Es el manager general de este protocolo. Este se encarga de tareas como: almacenar las ip's en el pool de direcciones y también eliminarlas del mismo. En una red de hogar, por lo general, este proceso es manejado directamente desde el router.
+Por ejemplo:
 
-- DHCP Client: Son los dispositivos que se conectan a la red y a los que el Server le asigna una ip. Este es el que tiene que solicitar una ip y puede también soltarla de ser necesario.
+PC
+ │
+ │ 192.168.1.20
+ ↓
+Router
+ │
+ │ 192.168.1.1
+ ↓
+Internet
 
-- DHCP Relay Agent: En el caso de redes complejas, este se encarga de redireccionar las peticiones de una red a una subnet, de manera que sirva de punto de acceso (GW) entre redes.
+En este caso:
 
-Tecnicamente, las gestiones que se encarga el protocolo DHCP se encuentra en el Layer 4, principalmente en los procesos relacionados UDP; pero también gestiona ciertos procesos pertenecientes a Layer 3.
+Default gateway = 192.168.1.1
 
-### Procesos DHCP
+---
 
-DHCP tiene unos procesos a la hora de asignar, eliminar y comprobar ip's como los siguientes:
+Tabla de routing en Linux
 
-1. Discover: Lo primero que hace este protocolo, es enviar un mensaje de broadcast a toda la red con destino a `255.255.255.255`. Esta ip es especial ya que es la que utiliza el protocolo DHCP para escuchar emnsajes. Se podría imaginar como que es la ip del servidor DHCP aunque no es del todo correcto. El resto de dispositivos conectados a la red van a recibir este mensaje pero lo van a ignorar.
+Podemos consultar la tabla de routing del sistema mediante:
 
-2. Offer: El servidor DHCP responde a la solicitud con una IP y la inforamción relacioada con la misma.
+ip route show
 
-3. Request: Cuando el servidor devuelve una ip disponible, el dispositivo que esta solicitando dicha ip acepta la ip y la inforamción y manda un mensaje al servidor DHCP aceptando la nueva ip y su información.
+Por ejemplo:
 
-4. Acknowledge: En este paso, el servidor DHCP recibe el mensaje request del dispositivo que esta solicitando la ip y el servidor manda un mensaje de `Acknowledge` informando que ha confirmado la asignación de la nueva ip y la duración que va a tener el dispositivo con la misma.
+default via 192.168.4.1 dev eth0 proto kernel
+192.168.4.0/22 dev eth0 proto kernel scope link src 192.168.7.235
 
-Este flujo se hace de esta manera cuando tenemos un dispositivo que queremos introducir nuevo en la red, en el caso de que queramos agregar un nuevo dispositivo a la red, el servidor DHCP va a recibir una `request` del dispositivo solicitando que se le vuelva a asignar la misma ip que tiene registrada anteriormente y luego se verá uin mensaje de `acknowledged`
+Esta salida no muestra los paquetes que se han enviado.
 
-## Inspeccionando DHCP systemd-networkd
+Muestra las reglas que utiliza el sistema para decidir por dónde enviar los paquetes IP.
 
-`systemd-networkd` es una herramienta para realizar tareas de inspección de redes montada sobre networkd el cual permite realizar inspecciones del protocolo DHCP.
+---
 
-Usualmente, cuando un dispositivo se conecta a una red, este ejecuta el protocolo DHCP para realizar las tareas de asignación y gestión de las ips dentro de la red. A nivel de sistema, cuando un dispositivo bootea, suele disparar también este protocolo para que busque una red a la cual conectarse.
+Ruta "default"
 
-Para ver los logs de systemd-networkd podemos empezar viendo los logs de `journalctl -u systemd-networkd`. Con esta herramienta podemos hacer debug viendo que si todo parece estar en orden, podemos detectar un problema de red relacionado con DHCP. 
+La línea:
 
-Este log nos muestra la información de los dispositivos y además, podemos ver las solicitudes y las interacciones que hace nuestro dispositivo con los servidores DHCP correspondientes.
+default via 192.168.4.1 dev eth0
 
-Suele ser un punto de partida a la hora de hacer debug cuando se tienen problemas de red.
+significa:
 
-## Inpeccionando DHCP con NetworkManager
+«Si no existe una ruta más específica para el destino, utiliza el gateway "192.168.4.1" a través de "eth0".»
 
-NetworkManager es otra herramienta que suelen tener ciertas distribuciones de Linux que se encargan de inspeccionar problemas relacionadso con la red. Suele estar presentes en distribuciones Linux CentOs o similares.
+Esta es la denominada default route.
 
-En aspectos generales, es una alternativa a systemd-networkd.
+Por ejemplo, si nuestro ordenador quiere comunicarse con:
 
-## Inspeccionando redes con la herramienta `ping`
+8.8.8.8
 
-Esta es otra herramienta que podemos utilizar para realizar inspecciones de la red.
+y no existe una ruta específica para "8.8.8.8", utilizará:
 
-Ping usa por debajo el protocolo ICMP (Internet Control Message Protocol) el cual utiliza para enviar paquetes `ICMP Echo request` al destinatario y si el destinatario soporta el protocolo ICMP (Casi todos lo soportan, suele haberse el caso de dispositivos que apagan este protocolo) devolvera una respuesta `ICMP Echo reply`.
+192.168.4.1
 
-Esta es una forma rápida de comprobar si dos nodos estan conectados, en el caso de que se envíe el ping y no vuelva, significa que por el camino pueden haber problemas (ICPM apagado, los dispositivos no estan coenctados, firewall bloqueando el tráfico, etc...).
+como siguiente salto.
 
-## Mostrando la ruta entre nodos con ICMP
+---
 
-Una de las cosas que muestra el protocolo ICMP es mostrar el path entre los dispositivo, esto lo podemos hacer con la herramienta `traceroute`. Con esta herramienta podemos ver dicho camino que toman las request desde el emisor al receptor.
+Ruta directamente conectada
 
-Con esta herramienta podemos ver dentro de la red donde estan los caminos donde se estan viendo afectados los tiempos de espera entre un nodo y otro. Identificamos los caminos mas lentos dentro de la ruta entre 2 nodos.
+La segunda línea:
 
-Este comando muestra la siguiente información: 
+192.168.4.0/22 dev eth0
 
-- Hop number: indica la posición del router en el path.
-- Router IP address/hostname: Idnetifica el router intermediario (GW)
-- RTT values: Los tiempos de respuesta de cada uno de los paths.
+indica que la red:
 
-Estos valores nos ayudan a identificar potenciales problemas.
+192.168.4.0/22
 
-``` salida del comando traceroute google.com
-traceroute to google.com (), 30 hops max, 60 byte packets
-1  * * *
-2  * * *
-3  * * *
-4  * * *
-5  * * *
-6  * ()  2.170 ms  2.338 ms
-7   ()  3.060 ms  3.051 ms  2.827 ms
-8  105.red-193-152-59.static.ccgg.telefonica.net ()  4.171 ms  4.150 ms  4.256 ms
-9  245.red-217-124-115.static.ccgg.telefonica.net ()  4.209 ms  4.520 ms  4.170 ms
-10  * * *
-11  * * *
-12   5.080 ms  4.924 ms  5.169 ms
-13    5.167 ms  5.014 ms  5.005 ms
-14   24.641 ms 142.251.231.147 (142.251.231.147)  24.001 ms 192.178.11
-15   24.503 ms  24.025 ms  23.957 ms
-16    23.737 ms  23.733 ms  23.729 ms
-```
+está directamente conectada a través de "eth0".
 
-Viendo la salida anterior, podemos detectar lo siguiente: 
+En este caso no necesitamos enviar el paquete a un router para llegar a un host de esa red.
 
-Antes que nada, las líneas que devuelven `* * *` se debe a que el router en cuestión no respondio a la solicitud, esto puede deberse a que no ha podido llegar a ese destino o que tiene deshabilitado el protocolo ICMP.
+Sin embargo, seguimos necesitando la capa 2 para transmitir el paquete.
 
-Luego, el primer dato que se observa es el hostname con su respectiva dirección IP la cual se esta llegnado.
+Por ejemplo:
 
-`traceroute to google.com (172.217.17.14), 30 hops max, 60 byte packets` -> en esta línea podemos observar la ip que esta apuntando el dominio en ese momento, también podemos ver la cantidad máxima de hops que tiene la consulta (esto se puede modificar en los parámetros del comando) y el tamaño del paquete que estamos enviando.
+PC A
+ │
+ │ IP + Ethernet
+ ↓
+PC B
 
-### Mecanismo de comunicacion de traceroute
+Si ambos están en la misma subred, el sistema puede determinar que el destino es local y utilizar mecanismos como ARP para descubrir la MAC correspondiente a la IP de destino.
 
-Primero debemos definir que es el TTL de el paquete IP. Este valor determina el tiempo de vida o los saltos que un paquete tiene de vida. Lo que hace es que el valor de TTL define la cantidad de veces que un paquete puede pasar por un router. Cuando un paquete pasa por un router, cada router decrementa esta valor en uno hasta que se agote el TTL, si el paquete se queda sin TTL, el router que reciba el TTL 1 va a descartarlo y el paquete desaparece de la red. Cuando un paquete muere, el router que descarta el paquete devuelve un paquete ICMP "Time Exceeded", indicando que el paquete se quedo sin TTL al pasar por ese router.
+---
 
-Lo que hace traceroute es definir en el paquete IP un tiempo de vida corto. Por ejemplo: Primero envia un paquete con TTL 1, lo que hace que al llegar al router, el paquete muere y por ende devuelve la inforamción del primer nodo que encuentra. Luego, manda un paquete con destino el cual hayamos definido con un TTL 2, y esto lo que hace es que pasa por el router, el router decrementa el TTL y luego va al siguiente nodo; este nodo mata al paquete y devuelve el ICMP "Time Exceeded" y asi sucesivamente.
+Subnets
 
-De esta forma podemos obtener la inforamción de los paquetes y sus respectivas métricas.
+Una subnet (subred) es una división lógica de un espacio de direcciones IP.
 
-### Cosas a tomar en cuenta
+Por ejemplo:
 
-Una de las cosas que puedes tener en cuenta a la hora de inspeccionar los saltos usando tracerouter es que si ves altos tiempos de respuesta, puede que debas revisar el hosting o la configuración que tengas creada. También puede deberse a problemas de infraestructura (instalaciones en mal estado, equiupos desactualizados, intentar llegar a un servidor que se encuentra muy lejos geograficamente, etc.)
+192.168.1.0/24
 
-Los * indican que se han perdido paquetes en el camino o que el router no permite responder a esos paquetes (deshabilitado ICMP), 
+representa una subred IPv4.
 
-Podemos ver también que se repite en multiples ocasiones que se intenta llegar a un mismo host, esto puede deberse a problemas de `Routin Loops` y es posible que tu IS este teniendo problemas a la hora de redireccionar los paquetes. 
+Podemos dividir un espacio de direcciones mayor en varias subredes.
+
+Por ejemplo:
+
+192.168.0.0/24
+192.168.1.0/24
+192.168.2.0/24
+192.168.3.0/24
+
+Estas son cuatro subredes independientes desde el punto de vista del direccionamiento IP.
+
+Las subredes permiten organizar y separar redes de forma lógica y pueden utilizarse para controlar el dominio de broadcast, el routing, la segmentación y la administración de la red.
+
+«Una subred no debe entenderse simplemente como "una red dentro de otra red". Es una porción definida del espacio de direcciones IP mediante un prefijo de red.»
+
+---
+
+Comunicación dentro y fuera de una subnet
+
+Supongamos que nuestro ordenador tiene:
+
+IP:      192.168.1.10
+Subnet: 192.168.1.0/24
+
+Y quiere comunicarse con:
+
+192.168.1.20
+
+El sistema determina que:
+
+192.168.1.20 ∈ 192.168.1.0/24
+
+Por tanto, considera que el destino está en la misma subred.
+
+En ese caso, el paquete IP se encapsula en un frame destinado directamente a la MAC del dispositivo correspondiente.
+
+Pero si queremos comunicarnos con:
+
+8.8.8.8
+
+el sistema determina que el destino no pertenece a la subred local.
+
+Entonces utiliza la default route y envía el frame al MAC del gateway.
+
+Por tanto:
+
+Destino local
+    ↓
+MAC del destino
+
+Destino remoto
+    ↓
+MAC del gateway
+    ↓
+Router
+    ↓
+Otra red
+
+---
+
+Subnet Mask
+
+La subnet mask indica qué parte de una dirección IPv4 corresponde al prefijo de red y qué parte queda disponible para identificar hosts dentro de esa subred.
+
+Por ejemplo:
+
+255.255.255.0
+
+equivale a:
+
+11111111.11111111.11111111.00000000
+
+Esto corresponde a:
+
+/24
+
+El "/24" significa que los primeros 24 bits corresponden al prefijo de red.
+
+Los 8 bits restantes corresponden a la parte de host.
+
+11111111.11111111.11111111.00000000
+<--------- 24 ---------> <---8--->
+         network          host
+
+---
+
+CIDR
+
+Actualmente es habitual expresar las máscaras mediante CIDR notation.
+
+Por ejemplo:
+
+192.168.1.0/24
+
+El "/24" indica que los primeros 24 bits forman el prefijo de red.
+
+Algunos ejemplos:
+
+/8  → 255.0.0.0
+/16 → 255.255.0.0
+/24 → 255.255.255.0
+/25 → 255.255.255.128
+/26 → 255.255.255.192
+/30 → 255.255.255.252
+
+---
+
+¿Cómo determina el sistema si un destino es local?
+
+El sistema puede utilizar una operación lógica AND entre una dirección IP y la máscara de red.
+
+Por ejemplo:
+
+IP:
+192.168.1.20
+
+Mask:
+/24
+255.255.255.0
+
+El resultado es:
+
+192.168.1.0
+
+Si otra dirección:
+
+192.168.1.50
+
+también produce:
+
+192.168.1.0
+
+significa que ambas direcciones pertenecen a la misma subred "/24".
+
+De forma simplificada:
+
+IP destino
+    ↓
+Aplicar máscara
+    ↓
+Comparar con la red local
+    ↓
+┌───────────────┴───────────────┐
+│                               │
+Misma red                   Otra red
+│                               │
+↓                               ↓
+Comunicación local          Gateway
+
+---
+
+Network Address y Broadcast Address
+
+En IPv4 existen determinadas direcciones con significado especial.
+
+Para:
+
+192.168.1.0/24
+
+tenemos:
+
+Network address:
+192.168.1.0
+
+Broadcast address:
+192.168.1.255
+
+La network address identifica la subred y normalmente no se asigna a un host.
+
+La broadcast address permite enviar tráfico a todos los hosts del dominio de broadcast IPv4 correspondiente.
+
+Por tanto:
+
+«"192.168.1.0" no significa necesariamente "gateway".»
+
+El gateway podría ser, por ejemplo:
+
+192.168.1.1
+
+pero esto es simplemente una convención frecuente, no una propiedad de la dirección.
+
+---
+
+Número de hosts
+
+En una red IPv4 tradicional:
+
+192.168.1.0/24
+
+tenemos:
+
+2^8 = 256 direcciones
+
+Normalmente:
+
+1 → network address
+1 → broadcast address
+
+por lo que quedan:
+
+254 direcciones utilizables para hosts
+
+Para:
+
+192.168.0.0/23
+
+tenemos 9 bits para hosts:
+
+2^9 = 512 direcciones
+
+y tradicionalmente:
+
+510 hosts utilizables
+
+Sin embargo, hay que tener cuidado: existen excepciones y casos especiales en IPv4, y las reglas no deben aplicarse mecánicamente a todos los prefijos.
+
+---
+
+¿Cómo podemos observar dispositivos de nuestra red?
+
+Una herramienta como Wireshark permite capturar tráfico de red y observar protocolos como ARP.
+
+ARP (Address Resolution Protocol) permite resolver una dirección IPv4 local en una dirección MAC.
+
+Por ejemplo, un host puede necesitar conocer:
+
+¿Quién tiene 192.168.1.1?
+
+y enviar una petición ARP:
+
+Who has 192.168.1.1?
+
+El dispositivo que posee esa IP puede responder:
+
+192.168.1.1 is at aa:bb:cc:dd:ee:ff
+
+Es importante corregir una idea de los apuntes originales:
+
+«ARP no se utiliza para preguntar qué IP está disponible para conectarse a una red.»
+
+Eso es función de DHCP.
+
+ARP sirve principalmente para descubrir la dirección MAC asociada a una dirección IPv4 dentro de un enlace local.
+
+---
+
+Configuración manual de direcciones IP
+
+Linux permite añadir una dirección IP a una interfaz mediante:
+
+ip addr add <ip>/<prefix> dev <interface>
+
+Por ejemplo:
+
+ip addr add 192.168.1.50/24 dev eth0
+
+Podemos eliminarla mediante:
+
+ip addr del 192.168.1.50/24 dev eth0
+
+Después podemos comprobar las direcciones configuradas mediante:
+
+ip addr show dev eth0
+
+Una interfaz puede tener más de una dirección IP.
+
+Por ejemplo:
+
+eth0
+ ├── 192.168.1.20/24
+ └── 192.168.1.50/24
+
+Esto no significa que tengamos dos interfaces físicas. Tenemos una única interfaz con varias direcciones IP.
+
+---
+
+¿Para qué puede ser útil tener varias IP?
+
+Tener múltiples direcciones IP en una interfaz puede ser útil en determinados escenarios, por ejemplo:
+
+- Configuraciones de servidores.
+- Migraciones.
+- Virtualización.
+- Servicios que necesitan direcciones diferentes.
+- Configuraciones de alta disponibilidad.
+- Entornos de pruebas.
+- Transiciones entre redes.
+- Algunos sistemas de balanceo y clustering.
+
+Sin embargo:
+
+«Tener varias IP en una interfaz no proporciona aislamiento ni seguridad por sí mismo.»
+
+Si necesitamos aislar tráfico entre servicios o redes, podemos utilizar mecanismos como:
+
+- VLANs.
+- Subredes.
+- Routing.
+- Firewalls.
+- Network namespaces.
+- Interfaces virtuales.
+- Políticas de routing.
+
+---
+
+Inspeccionar rutas concretas
+
+Podemos utilizar:
+
+ip route get <destination>
+
+para consultar qué ruta utilizaría el sistema para llegar a un destino determinado.
+
+Por ejemplo:
+
+ip route get 8.8.8.8
+
+Podríamos obtener algo similar a:
+
+8.8.8.8 via 192.168.1.1 dev eth0 src 192.168.1.20
+
+Esto significa, simplificando:
+
+Destino:
+8.8.8.8
+
+Gateway:
+192.168.1.1
+
+Interfaz:
+eth0
+
+IP de origen:
+192.168.1.20
+
+Si el destino está directamente conectado, podríamos obtener algo parecido a:
+
+192.168.1.50 dev eth0 src 192.168.1.20
+
+En ese caso no aparece un "via", porque el sistema considera que el destino es directamente alcanzable mediante esa interfaz.
+
+---
+
+Modificar la tabla de routing
+
+Podemos añadir una ruta manualmente:
+
+ip route add <network>/<prefix> via <gateway> dev <interface>
+
+Por ejemplo:
+
+ip route add 10.10.0.0/16 via 192.168.1.254 dev eth0
+
+Esto indica que para llegar a:
+
+10.10.0.0/16
+
+se debe utilizar:
+
+Gateway: 192.168.1.254
+Interface: eth0
+
+Para eliminarla:
+
+ip route del 10.10.0.0/16 via 192.168.1.254 dev eth0
+
+Estas rutas pueden ser muy útiles en entornos con varias redes, routers, VPNs, máquinas virtuales o configuraciones de laboratorio.
+
+---
+
+DHCP
+
+DHCP (Dynamic Host Configuration Protocol) permite configurar automáticamente determinados parámetros de red de un dispositivo.
+
+Entre estos parámetros pueden encontrarse:
+
+- Dirección IP.
+- Prefijo o máscara de red.
+- Default gateway.
+- Servidores DNS.
+- Tiempo de concesión (lease).
+- Otros parámetros de configuración.
+
+DHCP no "crea" físicamente una dirección IP. El servidor DHCP administra un conjunto de direcciones que puede asignar temporalmente a los clientes.
+
+---
+
+Componentes de DHCP
+
+DHCP Server
+
+Es el servidor que administra las concesiones DHCP.
+
+Puede mantener un pool de direcciones y asignarlas a los clientes.
+
+En una red doméstica, esta función suele estar integrada en el router.
+
+---
+
+DHCP Client
+
+Es el dispositivo que solicita la configuración de red.
+
+Por ejemplo:
+
+Laptop → DHCP Server
+
+El cliente solicita una configuración y recibe una concesión.
+
+---
+
+DHCP Relay Agent
+
+En redes más grandes, el servidor DHCP puede estar situado en otra red.
+
+Como las peticiones DHCP iniciales utilizan broadcast y los routers normalmente no reenvían broadcasts, puede utilizarse un DHCP relay agent.
+
+Su función es reenviar las solicitudes entre el cliente y el servidor DHCP.
+
+---
+
+¿En qué capa está DHCP?
+
+DHCP es un protocolo de capa de aplicación.
+
+Utiliza:
+
+Application → DHCP
+Transport   → UDP
+Network     → IP
+Data Link   → Ethernet / Wi-Fi
+Physical    → medio físico
+
+Por tanto, no es correcto clasificar DHCP como un protocolo de capa 4.
+
+DHCP utiliza UDP como protocolo de transporte.
+
+---
+
+Proceso DHCP — DORA
+
+El proceso clásico de obtención de una concesión DHCP se conoce como:
+
+D → Discover
+O → Offer
+R → Request
+A → Acknowledge
+
+1. DHCP Discover
+
+El cliente todavía puede no tener una dirección IP válida.
+
+Por ello, inicia una búsqueda de servidores DHCP.
+
+En IPv4, la solicitud inicial utiliza broadcast, normalmente con:
+
+Destination IP:
+255.255.255.255
+
+Esto significa IPv4 limited broadcast.
+
+No es la dirección del servidor DHCP.
+
+---
+
+2. DHCP Offer
+
+Uno o varios servidores DHCP pueden responder ofreciendo una configuración.
+
+La oferta puede incluir:
+
+IP:
+192.168.1.50
+
+Subnet:
+255.255.255.0
+
+Gateway:
+192.168.1.1
+
+DNS:
+...
+
+---
+
+3. DHCP Request
+
+El cliente selecciona una oferta y solicita formalmente esa configuración.
+
+---
+
+4. DHCP Acknowledge
+
+El servidor confirma la concesión.
+
+La respuesta puede incluir el tiempo durante el cual el cliente puede utilizar la dirección.
+
+Client
+  │
+  │ DHCP Discover
+  ↓
+Server
+  │
+  │ DHCP Offer
+  ↓
+Client
+  │
+  │ DHCP Request
+  ↓
+Server
+  │
+  │ DHCP ACK
+  ↓
+Client
+
+---
+
+Renovación de una concesión DHCP
+
+DHCP no necesariamente se ejecuta únicamente cuando un dispositivo se conecta por primera vez.
+
+Las direcciones se conceden durante un período determinado.
+
+Antes de que termine la concesión, el cliente puede intentar renovarla.
+
+Por eso, el comportamiento real puede incluir mensajes adicionales de DHCP durante la vida de la conexión.
+
+---
+
+Inspeccionando DHCP con systemd-networkd
+
+systemd-networkd es un servicio de Linux que puede encargarse de configurar y administrar interfaces de red.
+
+Podemos consultar sus logs mediante:
+
+journalctl -u systemd-networkd
+
+Esto puede ser útil para investigar problemas relacionados con:
+
+- Interfaces.
+- DHCP.
+- Configuración de direcciones.
+- Rutas.
+- Conectividad.
+- Cambios de estado de las interfaces.
+
+Por ejemplo, si una interfaz no recibe una dirección IP mediante DHCP, los logs de "systemd-networkd" pueden proporcionar información sobre el proceso de configuración.
+
+---
+
+NetworkManager
+
+NetworkManager es otro sistema utilizado para administrar conexiones de red en Linux.
+
+Es especialmente habitual en distribuciones orientadas a escritorio, aunque también puede utilizarse en servidores.
+
+Podemos consultar su estado mediante:
+
+nmcli device status
+
+y:
+
+nmcli connection show
+
+NetworkManager y "systemd-networkd" son alternativas de administración de red en muchos sistemas, aunque la configuración concreta depende de la distribución y del entorno.
+
+No debemos asumir que una distribución concreta utiliza necesariamente uno de ellos: lo importante es comprobar qué gestor está activo en el sistema.
+
+---
+
+Ping e ICMP
+
+"ping" es una herramienta utilizada para comprobar conectividad utilizando normalmente ICMP Echo Request y ICMP Echo Reply en IPv4.
+
+Por ejemplo:
+
+ping 8.8.8.8
+
+El proceso simplificado es:
+
+Host A
+ │
+ │ ICMP Echo Request
+ ↓
+Host B
+ │
+ │ ICMP Echo Reply
+ ↓
+Host A
+
+Si recibimos una respuesta, podemos comprobar que existe conectividad entre ambos extremos y medir aproximadamente el RTT (Round Trip Time).
+
+Sin embargo:
+
+«Que "ping" no reciba respuesta no demuestra necesariamente que el host esté caído.»
+
+Puede haber:
+
+- Firewall.
+- Filtrado de ICMP.
+- Problemas de routing.
+- Pérdida de paquetes.
+- Problemas de conectividad.
+- El destino puede estar configurado para no responder a ICMP.
+
+Del mismo modo, que "ping" funcione no demuestra que todos los demás servicios del host funcionen correctamente.
+
+---
+
+Traceroute
+
+"traceroute" permite intentar descubrir los saltos intermedios que atraviesa el tráfico hasta llegar a un destino.
+
+Por ejemplo:
+
+traceroute google.com
+
+Una salida típica puede tener esta estructura:
+
+1   192.168.1.1      1.2 ms   1.1 ms   1.3 ms
+2   10.0.0.1         5.2 ms   5.1 ms   5.4 ms
+3   ...
+
+Cada línea representa un TTL (Time To Live) y, normalmente, tres sondas.
+
+---
+
+¿Qué significa cada columna?
+
+Hop number
+
+Indica el valor de TTL utilizado y, de forma práctica, el número de salto que estamos intentando descubrir.
+
+1
+2
+3
+4
+...
+
+Router IP / hostname
+
+Es la dirección IP y, cuando se puede resolver, el nombre del dispositivo que respondió.
+
+RTT
+
+Los valores:
+
+5.2 ms
+5.1 ms
+5.4 ms
+
+son tiempos de ida y vuelta (Round Trip Time) de las sondas.
+
+---
+
+¿Cómo funciona traceroute?
+
+Cada paquete IP contiene un campo llamado:
+
+TTL — Time To Live
+
+En IPv4, el TTL se decrementa en cada router que reenvía el paquete.
+
+Por ejemplo:
+
+TTL = 3
+
+Router 1 → TTL 2
+Router 2 → TTL 1
+Router 3 → TTL 0 → descarta
+
+Cuando un router recibe un paquete cuyo TTL se agota, normalmente descarta el paquete y puede enviar al origen un mensaje ICMP:
+
+ICMP Time Exceeded
+
+Traceroute utiliza este comportamiento para descubrir los routers intermedios.
+
+---
+
+Ejemplo
+
+Primero puede enviar una sonda con:
+
+TTL = 1
+
+El primer router decrementa:
+
+1 → 0
+
+y devuelve:
+
+ICMP Time Exceeded
+
+Traceroute obtiene así información sobre el primer salto.
+
+Después envía:
+
+TTL = 2
+
+El primer router lo reenvía:
+
+2 → 1
+
+El segundo router lo recibe:
+
+1 → 0
+
+y devuelve otro:
+
+ICMP Time Exceeded
+
+Traceroute ha descubierto el segundo salto.
+
+El proceso continúa:
+
+TTL 1 → Hop 1
+TTL 2 → Hop 2
+TTL 3 → Hop 3
+TTL 4 → Hop 4
+...
+
+---
+
+Los "* * *" de traceroute
+
+Podemos encontrarnos con:
+
+10   * * *
+
+Esto no significa necesariamente que se haya perdido un paquete en ese punto.
+
+Significa que traceroute no recibió una respuesta para esas sondas dentro del tiempo esperado.
+
+Puede deberse a:
+
+- Un firewall.
+- Filtrado de ICMP.
+- Rate limiting.
+- Un router configurado para no responder.
+- Pérdida real de paquetes.
+- Otros mecanismos de filtrado.
+
+Por eso es perfectamente posible encontrar:
+
+1   192.168.1.1     1 ms
+2   * * *
+3   10.20.0.1       5 ms
+
+y que la comunicación siga funcionando correctamente.
+
+---
+
+Interpretando RTT en traceroute
+
+Hay que tener cuidado al interpretar los tiempos.
+
+Supongamos:
+
+1   192.168.1.1      1 ms
+2   10.0.0.1        80 ms
+3   20.0.0.1         5 ms
+
+No podemos concluir automáticamente que el router del segundo salto está causando una latencia de 80 ms.
+
+Los routers pueden tratar las respuestas destinadas a traceroute o ICMP con una prioridad menor que el tráfico normal.
+
+Si un salto muestra un RTT elevado pero los siguientes vuelven a tener valores bajos, eso puede ser simplemente una consecuencia de cómo ese router procesa las sondas.
+
+Un aumento de RTT que persiste en los siguientes saltos es más informativo para investigar dónde comienza una degradación de la ruta.
+
+---
+
+Routing loops
+
+Un routing loop ocurre cuando un paquete queda atrapado entre routers que se reenvían el paquete entre sí debido a una configuración incorrecta de routing.
+
+Por ejemplo:
+
+Router A
+   ↓
+Router B
+   ↓
+Router C
+   ↓
+Router A
+   ↓
+Router B
+   ↓
+...
+
+El TTL evita que un paquete permanezca indefinidamente en la red.
+
+Sin embargo, que un router aparezca varias veces en un "traceroute" no demuestra por sí mismo que exista un routing loop.
+
+Hay que analizar la secuencia completa de saltos y el comportamiento de la ruta antes de sacar esa conclusión.
+
+---
+
+Resumen de la Network Layer
+
+La capa 3 puede resumirse mediante estos conceptos:
+
+                 NETWORK LAYER
+                       │
+       ┌───────────────┼────────────────┐
+       │               │                │
+   IP Addressing     Routing          Packets
+       │               │                │
+       │               │                │
+   Subnets         Routers         Encapsulation
+       │               │                │
+       └───────────────┼────────────────┘
+                       │
+                  Layer 2 Frame
+
+La idea fundamental es:
+
+«La capa 3 permite que los paquetes IP viajen entre diferentes redes. Los routers utilizan tablas de routing para decidir el siguiente salto. En cada enlace, el paquete IP se encapsula dentro de un frame de la tecnología de capa 2 correspondiente.»
+
+Podemos visualizar todo el proceso así:
+
+              NETWORK LAYER
+                   │
+             IP Packet
+                   │
+       ┌───────────┴───────────┐
+       │                       │
+   Source IP              Destination IP
+       │                       │
+       └───────────┬───────────┘
+                   │
+             Layer 2 Frame
+                   │
+                   ↓
+                 Router
+                   │
+             Routing table
+                   │
+             Next hop / route
+                   │
+             New Layer 2 Frame
+                   │
+                   ↓
+              Next Router
+                   │
+                  ...
+
+La distinción que conviene tener completamente clara antes de pasar a Transport Layer es:
+
+L2 — Data Link
+    Frames
+    MAC addresses
+    Ethernet / Wi-Fi
+    Switches
+    Comunicación mediante enlaces
+
+L3 — Network
+    Packets
+    IP addresses
+    Routing
+    Routers
+    Comunicación entre redes
+
+Y una última corrección conceptual especialmente importante: Internet no es una "subnet" de tu Wi-Fi. Tu red Wi-Fi doméstica es una red/subred privada que se conecta, mediante un router y un proveedor de Internet, con otras muchas redes. Internet es una interconexión de redes, no una única subred gigantesca.
